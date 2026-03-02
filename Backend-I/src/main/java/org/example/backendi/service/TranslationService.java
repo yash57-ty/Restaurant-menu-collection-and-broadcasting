@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URLEncoder;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -17,28 +17,35 @@ public class TranslationService {
     public String translateGujaratiToEnglish(String text) {
 
         try {
-            // Encode full multiline text safely
-            String encoded = URLEncoder.encode(text, StandardCharsets.UTF_8);
 
-            String url =
-                    "https://translate.googleapis.com/translate_a/single"
-                            + "?client=gtx"
-                            + "&sl=gu"
-                            + "&tl=en"
-                            + "&dt=t"
-                            + "&q=" + encoded;
+            String url = "https://translate.googleapis.com/translate_a/single" +
+                    "?client=gtx" +
+                    "&sl=gu" +
+                    "&tl=en" +
+                    "&dt=t" +
+                    "&q=" + text;
 
-            String response = restTemplate.getForObject(url, String.class);
+            // Important: Let RestTemplate handle encoding
+            URI uri = new URI(url);
+
+            String response = restTemplate.getForObject(uri, String.class);
 
             JsonNode root = objectMapper.readTree(response);
 
-            String translatedText = root.get(0).get(0).get(0).asText();
+            // Google returns multiple segments for multiline text
+            JsonNode translations = root.get(0);
 
-            return translatedText;
+            StringBuilder result = new StringBuilder();
+
+            for (JsonNode segment : translations) {
+                result.append(segment.get(0).asText());
+            }
+
+            return result.toString();
 
         } catch (Exception e) {
             e.printStackTrace();
-            return text;
+            return text; // fallback: original Gujarati (NOT encoded)
         }
     }
 }

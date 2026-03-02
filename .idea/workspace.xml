@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb146c9f-edbd-4467-a926-8a00eec8cbde" name="Changes" comment="" />
+    <list default="true" id="bb146c9f-edbd-4467-a926-8a00eec8cbde" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-I/src/main/java/org/example/backendi/service/RestaurantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-I/src/main/java/org/example/backendi/service/RestaurantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Backend-I/src/main/java/org/example/backendi/service/TranslationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Backend-I/src/main/java/org/example/backendi/service/TranslationService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

@@ -17,6 +17,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+
 @Service
 public class RestaurantService {
 
@@ -46,6 +49,16 @@ public class RestaurantService {
 
         String phone = messagesNode.path("from").asText();
         String text = messagesNode.path("text").path("body").asText().trim();
+
+        if(text == null || text.isBlank()){
+            return;
+        }
+        try {
+            text = URLDecoder.decode(text, StandardCharsets.UTF_8);
+        } catch (Exception ignored) {}
+
+        text = text.trim();
+
         synchronized (getPhoneLock(phone)) {
             Restaurant res = restaurantRepository.findByPhone(phone);
             if (res == null) {
@@ -157,13 +170,18 @@ public class RestaurantService {
                         }
 
                         menuExpiry = expiryZdt.toInstant();
-                        String originalMenu = menu_session.getMessage();
-                        String translatedMenu = translationService.translateGujaratiToEnglish(originalMenu);
                         menu_session.setTime(text);
                         //menu_session.setExpiresAtMenu(menuExpiry);
                         menu_session.setCurrent_status("COMPLETED");
                         // refreshSession(menu_session);
                         menusessionRepo.save(menu_session);
+                        String originalMenu = menu_session.getMessage();
+                        System.out.println("ORIGINAL MENU BEFORE TRANSLATION:");
+                        System.out.println(originalMenu);
+                        String translatedMenu = translationService.translateGujaratiToEnglish(originalMenu);
+                        System.out.println("Translated MENU:");
+                        System.out.println(translatedMenu);
+
                         MenuStore store = new MenuStore();
                         store.setMenu(translatedMenu);
                         store.setPrice(menu_session.getPrice());

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URI;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -18,21 +18,23 @@ public class TranslationService {
 
         try {
 
-            String url = "https://translate.googleapis.com/translate_a/single" +
-                    "?client=gtx" +
-                    "&sl=gu" +
-                    "&tl=en" +
-                    "&dt=t" +
-                    "&q=" + text;
+            // Encode ONLY the text parameter
+            String encodedText =
+                    URLEncoder.encode(text, StandardCharsets.UTF_8);
 
-            // Important: Let RestTemplate handle encoding
-            URI uri = new URI(url);
+            String url =
+                    "https://translate.googleapis.com/translate_a/single" +
+                            "?client=gtx" +
+                            "&sl=gu" +
+                            "&tl=en" +
+                            "&dt=t" +
+                            "&q=" + encodedText;
 
-            String response = restTemplate.getForObject(uri, String.class);
+            String response =
+                    restTemplate.getForObject(url, String.class);
 
             JsonNode root = objectMapper.readTree(response);
 
-            // Google returns multiple segments for multiline text
             JsonNode translations = root.get(0);
 
             StringBuilder result = new StringBuilder();
@@ -45,7 +47,7 @@ public class TranslationService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return text; // fallback: original Gujarati (NOT encoded)
+            return text; // fallback safely
         }
     }
 }

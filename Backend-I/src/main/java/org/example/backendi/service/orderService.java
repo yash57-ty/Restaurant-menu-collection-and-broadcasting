@@ -55,7 +55,6 @@ public class orderService {
                 .findById(request.menuId())
                 .orElseThrow();
 
-        // Create order
         Order order = new Order();
         order.setUser(user);
         order.setMenuStore(menuStore);

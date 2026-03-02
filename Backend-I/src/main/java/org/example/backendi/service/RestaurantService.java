@@ -32,9 +32,6 @@ public class RestaurantService {
     @Autowired
     private MenusessionRepo menusessionRepo;
 
-    @Autowired
-    private TranslationService translationService;
-
     private final Map<String, Object> phoneLocks = new ConcurrentHashMap<>();
 
     private Object getPhoneLock(String phone) {
@@ -44,8 +41,8 @@ public class RestaurantService {
     public void getRestaurantdetails(JsonNode messagesNode) {
 
 
-            String phone = messagesNode.path("from").asText();
-            String text = messagesNode.path("text").path("body").asText().trim();
+        String phone = messagesNode.path("from").asText();
+        String text = messagesNode.path("text").path("body").asText().trim();
         synchronized (getPhoneLock(phone)) {
             Restaurant res = restaurantRepository.findByPhone(phone);
             if (res == null) {
@@ -106,7 +103,7 @@ public class RestaurantService {
                     try {
                         menu_session.setLimit(Integer.parseInt(text));
                         menu_session.setCurrent_status("WAITING_TIME");
-                       // refreshSession(menu_session);
+                        // refreshSession(menu_session);
                         menusessionRepo.save(menu_session);
                         wap.sendText(phone, "⏰ Enter time (e.g. 05:30 PM  and 11:30 AM)");
                     } catch (NumberFormatException e) {
@@ -160,25 +157,10 @@ public class RestaurantService {
                         menu_session.setTime(text);
                         //menu_session.setExpiresAtMenu(menuExpiry);
                         menu_session.setCurrent_status("COMPLETED");
-                       // refreshSession(menu_session);
+                        // refreshSession(menu_session);
                         menusessionRepo.save(menu_session);
                         MenuStore store = new MenuStore();
-                        String originalMenu = menu_session.getMessage();
-                        String finalMenu = originalMenu;
-
-                        System.out.println("Original menu:");
-                        System.out.println(originalMenu);
-
-                        boolean hasGujarati = translationService.containsGujarati(originalMenu);
-                        System.out.println("Contains Gujarati: " + hasGujarati);
-
-                        if (hasGujarati) {
-                            String translated = translationService.translateGujaratiToEnglish(originalMenu);
-                            System.out.println("Translated menu:");
-                            System.out.println(translated);
-                            finalMenu = translated;
-                        }
-                        store.setMenu(finalMenu);
+                        store.setMenu(menu_session.getMessage());
                         store.setPrice(menu_session.getPrice());
                         store.setLimit(menu_session.getLimit());
                         store.setTime_limit(menu_session.getTime());

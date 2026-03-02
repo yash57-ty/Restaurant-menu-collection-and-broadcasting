@@ -44,8 +44,8 @@ public class AdminService {
                     restaurant.getId(),
                     new AdminResponse(
                             restaurant.getRestaurantName(),
-                            0,   // totalPrice
-                            0    // totalOrderCount
+                            0,
+                            0
                     )
             );
         }

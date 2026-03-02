@@ -85,11 +85,13 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
             }
           `}
         >
+          
           {isLimitReached
             ? "Orders Closed"
             : isSelected
             ? "✔ Selected"
             : "Select Restaurant"}
+
         </button>
       </div>
     </div>

@@ -7,59 +7,38 @@ import org.springframework.web.client.RestTemplate;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.regex.Pattern;
 
 @Service
 public class TranslationService {
-    private static final Pattern GUJARATI_PATTERN = Pattern.compile("[\\u0A80-\\u0AFF]");
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public String translateGujaratiToEnglish(String text) {
+
         try {
-            StringBuilder result = new StringBuilder();
+            // Encode full multiline text safely
+            String encoded = URLEncoder.encode(text, StandardCharsets.UTF_8);
 
-            String[] lines = text.split("\\n");
+            String url =
+                    "https://translate.googleapis.com/translate_a/single"
+                            + "?client=gtx"
+                            + "&sl=gu"
+                            + "&tl=en"
+                            + "&dt=t"
+                            + "&q=" + encoded;
 
-            for (String line : lines) {
+            String response = restTemplate.getForObject(url, String.class);
 
-                if (line.trim().isEmpty()) {
-                    result.append("\n");
-                    continue;
-                }
+            JsonNode root = objectMapper.readTree(response);
 
-                String encodedText = URLEncoder.encode(line, StandardCharsets.UTF_8);
+            String translatedText = root.get(0).get(0).get(0).asText();
 
-                if (encodedText.length() > 450) {
-                    // Skip translation if single line too big
-                    result.append(line).append("\n");
-                    continue;
-                }
-
-                String url = "https://api.mymemory.translated.net/get"
-                        + "?q=" + encodedText
-                        + "&langpair=gu|en";
-
-                String response = restTemplate.getForObject(url, String.class);
-
-                JsonNode root = objectMapper.readTree(response);
-                String translated = root
-                        .path("responseData")
-                        .path("translatedText")
-                        .asText();
-
-                result.append(translated).append("\n");
-            }
-
-            return result.toString().trim();
+            return translatedText;
 
         } catch (Exception e) {
             e.printStackTrace();
             return text;
         }
-    }
-
-    public boolean containsGujarati(String text) {
-        return GUJARATI_PATTERN.matcher(text).find();
     }
 }

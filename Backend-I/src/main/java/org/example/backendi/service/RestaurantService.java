@@ -17,9 +17,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-
 @Service
 public class RestaurantService {
 
@@ -35,9 +32,6 @@ public class RestaurantService {
     @Autowired
     private MenusessionRepo menusessionRepo;
 
-    @Autowired
-    private TranslationService translationService;
-
     private final Map<String, Object> phoneLocks = new ConcurrentHashMap<>();
 
     private Object getPhoneLock(String phone) {
@@ -49,16 +43,6 @@ public class RestaurantService {
 
         String phone = messagesNode.path("from").asText();
         String text = messagesNode.path("text").path("body").asText().trim();
-
-        if(text == null || text.isBlank()){
-            return;
-        }
-        try {
-            text = URLDecoder.decode(text, StandardCharsets.UTF_8);
-        } catch (Exception ignored) {}
-
-        text = text.trim();
-
         synchronized (getPhoneLock(phone)) {
             Restaurant res = restaurantRepository.findByPhone(phone);
             if (res == null) {
@@ -175,15 +159,8 @@ public class RestaurantService {
                         menu_session.setCurrent_status("COMPLETED");
                         // refreshSession(menu_session);
                         menusessionRepo.save(menu_session);
-                        String originalMenu = menu_session.getMessage();
-                        System.out.println("ORIGINAL MENU BEFORE TRANSLATION:");
-                        System.out.println(originalMenu);
-                        String translatedMenu = translationService.translateGujaratiToEnglish(originalMenu);
-                        System.out.println("Translated MENU:");
-                        System.out.println(translatedMenu);
-
                         MenuStore store = new MenuStore();
-                        store.setMenu(translatedMenu);
+                        store.setMenu(menu_session.getMessage());
                         store.setPrice(menu_session.getPrice());
                         store.setLimit(menu_session.getLimit());
                         store.setTime_limit(menu_session.getTime());

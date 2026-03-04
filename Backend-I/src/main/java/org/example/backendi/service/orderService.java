@@ -12,7 +12,9 @@ import org.example.backendi.repo.orderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class orderService {
@@ -28,6 +30,7 @@ public class orderService {
 
     @Autowired
     private MenuStoreRepository menuStoreRepository;
+
 
     @Transactional
     public OrderResponse fetchorder(orderRequest request, String userPhone) {
@@ -55,11 +58,13 @@ public class orderService {
                 .findById(request.menuId())
                 .orElseThrow();
 
+
         Order order = new Order();
         order.setUser(user);
         order.setMenuStore(menuStore);
         order.setAddress(request.address());
         order.setQuantity(request.quantity());
+        order.setStatus("CONFIRMED");
 
         orderRepo.save(order);
 
@@ -69,6 +74,7 @@ public class orderService {
         }
 
         wap.sendOrderMessage(
+                order.getId(),
                 to,
                 user.getName(),
                 user.getPhone(),
@@ -78,6 +84,7 @@ public class orderService {
         );
 
         return new OrderResponse(
+                order.getId(),
                 menuStore.getRestaurant().getRestaurantName(),
                 request.quantity(),
                 menuStore.getPrice(),
@@ -88,13 +95,18 @@ public class orderService {
 
 
     public List<OrderResponse> getOrdersByUser(String userPhone) {
+
         User user = userRepository.findByPhone(userPhone);
+
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
+
         List<Order> orders = orderRepo.findByUser(user);
+
         return orders.stream()
                 .map(order -> new OrderResponse(
+                        order.getId(),
                         order.getMenuStore().getRestaurant().getRestaurantName(),
                         order.getQuantity(),
                         order.getMenuStore().getPrice(),
@@ -103,4 +115,74 @@ public class orderService {
                 ))
                 .toList();
     }
+
+    @Transactional
+    public String cancelOrder(Long orderId, int cancelQty, String phone){
+
+        Order order = orderRepo.findById(orderId).orElse(null);
+
+        if(order == null){
+            throw new RuntimeException("Order not found");
+        }
+
+        User user = userRepository.findByPhone(phone);
+        if(!order.getUser().getPhone().equals(phone)){
+            throw new RuntimeException("Unauthorized request");
+        }
+
+        MenuStore menu = order.getMenuStore();
+        if(menu.getExpiresAt().isBefore(Instant.now())){
+            throw new RuntimeException("Menu expired. Cancellation not allowed.");
+        }
+
+        if(cancelQty <= 0){
+            throw new RuntimeException("Invalid cancel quantity");
+        }
+
+        if(cancelQty > order.getQuantity()){
+            throw new RuntimeException("Cannot cancel more than ordered quantity");
+        }
+        String to = menu.getPhone();
+        if (!to.startsWith("+")) {
+            to = "+" + to;
+        }
+
+        int remainingQty = order.getQuantity() - cancelQty;
+        int orderQty = menu.getOrerCount();
+        int remain=orderQty-cancelQty;
+        menu.setOrerCount(remain);
+        menuStoreRepository.save(menu);
+        if(remainingQty == 0){
+            order.setQuantity(0);
+            order.setStatus("CANCELLED");
+            orderRepo.save(order);
+            wap.cancelOrderMessage(
+                    order.getId(),
+                    to,
+                    user.getName(),
+                    user.getPhone(),
+                    order.getAddress(),
+                    cancelQty,
+                    remain
+            );
+            return "Order fully cancelled";
+        }
+
+        order.setQuantity(remainingQty);
+        order.setStatus("PARTIALLY_CANCELLED");
+        orderRepo.save(order);
+
+
+        wap.cancelOrderMessage(
+                order.getId(),
+                to,
+                user.getName(),
+                user.getPhone(),
+                order.getAddress(),
+                cancelQty,
+                remain
+        );
+        return "Order partially cancelled";
+    }
+
 }

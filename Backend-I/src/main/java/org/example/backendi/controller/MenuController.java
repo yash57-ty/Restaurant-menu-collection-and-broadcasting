@@ -11,25 +11,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(origins="http://localhost:5173, https://nakita-unfrequentative-buckishly.ngrok")
 @RestController
 public class MenuController {
-
     @Autowired
     MenuService menuService;
 
     @Autowired
     private orderService orderService;
-
-
     @GetMapping("api/message")
     public List<MenuResponse> getMenus(
             @RequestParam(required = false) String keyword
     ) {
         return menuService.getmenubySearch(keyword);
     }
-
     @PostMapping("api/response")
     public ResponseEntity<?> fetchdata(
             @RequestBody orderRequest request,
@@ -78,5 +75,31 @@ public class MenuController {
                     .body(e.getMessage());
         }
     }
+
+
+    @PutMapping("/api/orders/{orderId}/cancel")
+    public ResponseEntity<?> cancelOrder(
+            @PathVariable Long orderId,
+            @RequestBody Map<String,Integer> body,
+            @RequestHeader("X-USER-PHONE") String phone
+    ){
+
+        try {
+
+            int cancelQty = body.get("cancelQuantity");
+
+            String result = orderService.cancelOrder(orderId, cancelQty, phone);
+
+            return ResponseEntity.ok(result);
+
+        }catch (RuntimeException e){
+
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
+        }
+
+    }
+
 
 }

@@ -47,6 +47,7 @@ class WhatsappClient {
 
 
     public void sendOrderMessage(
+            Long orderId,
             String restaurantPhone,
             String userName,
             String userMobile,
@@ -59,13 +60,52 @@ class WhatsappClient {
 
         Map<String, Object> text = new HashMap<>();
         text.put("body",
-                "📦 *New Order Received*\n\n" +
+                        "📦 *New Order Received*\n\n" +
+                        "🆔 *Order ID:* #" + orderId + "\n\n" +
                         "👤 Customer Name: " + userName + "\n\n" +
                         "📞 Customer Phone: " + userMobile + "\n\n" +
-                        "📍 Customer Address:\n" +
-                        address+ "\n\n" +
+                        "📍 Customer Address:\n" + address+ "\n\n" +
                         "💰 Total: " + current + "\n\n"+
                         "👥 No. of Customers: " + count
+        );
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("messaging_product", "whatsapp");
+        body.put("to", restaurantPhone);
+        body.put("type", "text");
+        body.put("text", text);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<Map<String, Object>> request =
+                new HttpEntity<>(body, headers);
+
+        restTemplate.postForEntity(url, request, String.class);
+    }
+
+    public void cancelOrderMessage(
+            Long orderId,
+            String restaurantPhone,
+            String userName,
+            String userMobile,
+            String address,
+            int cancel,
+            int remain
+    ) {
+
+        String url = "https://graph.facebook.com/v19.0/" + phoneId + "/messages";
+
+        Map<String, Object> text = new HashMap<>();
+        text.put("body",
+                "❌ *Order Update*\n\n" +
+                        "🆔 *Order ID:* #" + orderId + "\n\n" +
+                        "👤 Customer Name: " + userName + "\n\n" +
+                        "📞 Customer Phone: " + userMobile + "\n\n" +
+                        "📍 Customer Address:\n" + address+ "\n\n" +
+                        "💰 Total cancel: " + cancel + "\n\n"+
+                        "👥 No. of Customers: " + remain
         );
 
         Map<String, Object> body = new HashMap<>();

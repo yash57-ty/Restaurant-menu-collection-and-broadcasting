@@ -36,9 +36,7 @@ public class AdminService {
 
         List<Restaurant> restaurants = restaurantRepository.findAll();
         List<MenuStore> menuStores = menuStoreRepository.findAll();
-
         HashMap<Long, AdminResponse> resultMap = new HashMap<>();
-
         for (Restaurant restaurant : restaurants) {
             resultMap.put(
                     restaurant.getId(),
@@ -70,8 +68,8 @@ public class AdminService {
                     )
             );
         }
-
         return new ArrayList<>(resultMap.values());
+
     }
 
 

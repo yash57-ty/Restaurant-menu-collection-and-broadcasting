@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("")
 @RequestMapping("/webhook")
 public class RestaurantController {
-
     private static final String VERIFY_TOKEN = "my_verify_token";
 
     @Autowired
@@ -71,5 +70,4 @@ public class RestaurantController {
         }
         return ResponseEntity.ok("EVENT_RECEIVED");
     }
-
 }

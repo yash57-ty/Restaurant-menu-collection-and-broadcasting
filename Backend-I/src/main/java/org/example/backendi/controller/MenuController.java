@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+
 @CrossOrigin(origins="http://localhost:5173, https://nakita-unfrequentative-buckishly.ngrok")
 @RestController
 public class MenuController {
     @Autowired
     MenuService menuService;
-
     @Autowired
     private orderService orderService;
     @GetMapping("api/message")
@@ -100,6 +100,4 @@ public class MenuController {
         }
 
     }
-
-
 }

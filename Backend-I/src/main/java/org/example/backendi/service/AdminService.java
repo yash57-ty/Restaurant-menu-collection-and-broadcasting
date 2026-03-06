@@ -1,6 +1,5 @@
 package org.example.backendi.service;
 
-
 import org.example.backendi.model.MenuStore;
 import org.example.backendi.model.Restaurant;
 import org.example.backendi.model.dto.AdminResponse;
@@ -11,42 +10,41 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AdminService {
 
     @Autowired
     RestaurantRepository restaurantRepository;
+
     @Autowired
     MenuStoreRepository menuStoreRepository;
 
     public ResponseEntity<?> addRestaurant(RestaurantRequest restaurantRequest) {
+
         Restaurant restaurant = new Restaurant();
+
         restaurant.setRestaurantName(restaurantRequest.RestaurantName());
         restaurant.setName(restaurantRequest.name());
-        restaurant.setPhone("91"+restaurantRequest.Phone());
+        restaurant.setPhone("91" + restaurantRequest.Phone());
+        restaurant.setCity(restaurantRequest.City());
+
         restaurantRepository.save(restaurant);
+
         return ResponseEntity.ok().build();
     }
 
-    public List<AdminResponse> getRestaurant(int page, int size String month) {
+    public List<AdminResponse> getRestaurant(int page, int size, String month) {
 
         List<Restaurant> restaurants = restaurantRepository.findAll();
-
-        int start = page * size;
-        int end = Math.min(start + size, restaurants.size());
-
-        if(start >= restaurants.size()){
-            return new ArrayList<>();
-        }
-        List<Restaurant> pagedRestaurant = restaurants.subList(start, end);
-
         List<MenuStore> menuStores = menuStoreRepository.findAll();
+
         HashMap<Long, AdminResponse> resultMap = new HashMap<>();
+
+        // Initialize restaurant stats
         for (Restaurant restaurant : restaurants) {
+
             resultMap.put(
                     restaurant.getId(),
                     new AdminResponse(
@@ -58,7 +56,9 @@ public class AdminService {
             );
         }
 
+        // Calculate orders and revenue
         for (MenuStore menuStore : menuStores) {
+
             Long restaurantId = menuStore.getRestaurant().getId();
 
             if (!resultMap.containsKey(restaurantId)) continue;
@@ -79,6 +79,7 @@ public class AdminService {
 
             int updatedRevenue = existing.totalPrice() + revenue;
             int updatedOrder = existing.totalOrderCount() + order;
+
             int profit = updatedOrder * 2;
 
             resultMap.put(
@@ -91,7 +92,18 @@ public class AdminService {
                     )
             );
         }
-        return new ArrayList<>(resultMap.values());
 
+        // Convert to list
+        List<AdminResponse> allRestaurants = new ArrayList<>(resultMap.values());
+
+        // Pagination
+        int start = page * size;
+        int end = Math.min(start + size, allRestaurants.size());
+
+        if (start >= allRestaurants.size()) {
+            return new ArrayList<>();
+        }
+
+        return allRestaurants.subList(start, end);
     }
 }

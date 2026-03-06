@@ -13,8 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -133,7 +132,6 @@ public class RestaurantService {
                                 text.trim().toUpperCase(),
                                 DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
                         );
-
                         LocalDate today = LocalDate.now(zone);
 
                         // Try TODAY first
@@ -186,5 +184,18 @@ public class RestaurantService {
                     wap.sendText(phone, "❓ Unknown state. Type RESET.");
             }
         }
+    }
+
+    public List<String> fetchcity() {
+        List<Restaurant> cities=restaurantRepository.findAll();
+        List<String> citiesName=new ArrayList<>();
+        HashSet<String> citiesSet=new HashSet<>();
+        for (Restaurant restaurant:cities) {
+            if(!citiesSet.contains(restaurant.getCity())) {
+                citiesName.add(restaurant.getCity());
+                citiesSet.add(restaurant.getCity());
+            }
+        }
+        return citiesName;
     }
 }

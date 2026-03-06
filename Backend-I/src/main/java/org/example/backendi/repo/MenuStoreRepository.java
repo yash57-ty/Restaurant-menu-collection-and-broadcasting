@@ -19,11 +19,12 @@ public interface MenuStoreRepository extends JpaRepository<MenuStore,Long> {
     Optional<MenuStore> findForUpdate(@Param("id") Long id);
     Optional<MenuStore> findByPhone(String phone);
     @Query("""
-    SELECT m FROM MenuStore m
-    WHERE m.expiresAt > CURRENT_TIMESTAMP
-    AND m.OrerCount < m.limit
-    """)
-    List<MenuStore> findActiveMenus();
+       SELECT m FROM MenuStore m
+       WHERE m.expiresAt > CURRENT_TIMESTAMP
+       AND m.OrerCount < m.limit
+       AND (:city IS NULL OR LOWER(m.restaurant.City) = LOWER(:city))
+       """)
+    List<MenuStore> findActiveMenus(@Param("city") String city);
     @Query("""
 SELECT m FROM MenuStore m
 WHERE m.expiresAt > CURRENT_TIMESTAMP

@@ -4,5 +4,5 @@ public record AdminResponse(
         String name,
         int totalPrice,
         int totalOrderCount,
-        int profit,
+        int profit
 ) {}

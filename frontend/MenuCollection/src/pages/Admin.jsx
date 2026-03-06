@@ -8,11 +8,12 @@ function Admin() {
   const [formData, setFormData] = useState({
     name: "",
     Phone: "",
-    RestaurantName: ""
+    RestaurantName: "",
+    City:""
   });
 
   const [page, setPage] = useState(0);
-  const pageSize = 10;
+  const pageSize = 8;
 
   const handleChange = (e) => {
     setFormData({
@@ -66,6 +67,11 @@ function Admin() {
     0
   );
 
+  const totalProfit = restaurants.reduce(
+    (sum, r) => sum + r.totalOrderCount*2,
+    0
+  );
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50 p-8">
 
@@ -85,7 +91,7 @@ function Admin() {
         />
       </div>
 
-      <div className="grid md:grid-cols-3 gap-6 mb-12">
+      <div className="grid md:grid-cols-4 gap-6 mb-12">
 
         <div className="bg-white p-6 rounded-2xl shadow-md border border-orange-100">
           <h3 className="text-sm text-gray-500 mb-2">Total Restaurants</h3>
@@ -107,6 +113,13 @@ function Admin() {
           <h3 className="text-sm text-gray-500 mb-2">Total Revenue</h3>
           <p className="text-3xl font-bold text-red-500">
             ₹ {totalRevenue}
+          </p>
+        </div>
+
+        <div className="bg-white p-6 rounded-2xl shadow-md border border-orange-100">
+          <h3 className="text-sm text-gray-500 mb-2">Total Profit</h3>
+          <p className="text-3xl font-bold text-red-500">
+            ₹ {totalProfit}
           </p>
         </div>
       </div>
@@ -214,6 +227,16 @@ function Admin() {
                 name="RestaurantName"
                 placeholder="Restaurant Name"
                 value={formData.RestaurantName}
+                onChange={handleChange}
+                className="w-full border p-3 rounded-lg"
+                required
+              />
+
+              <input
+                type="text"
+                name="City"
+                placeholder="City"
+                value={formData.City}
                 onChange={handleChange}
                 className="w-full border p-3 rounded-lg"
                 required

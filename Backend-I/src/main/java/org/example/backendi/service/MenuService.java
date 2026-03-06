@@ -6,7 +6,6 @@ import org.example.backendi.repo.MenuStoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,26 +17,6 @@ public class MenuService {
 
     public void storeMenu(MenuStore menuStore){
         menuStoreRepository.save(menuStore);
-    }
-
-    public List<MenuResponse> getmenu() {
-        List<MenuStore> mn = menuStoreRepository.findActiveMenus();
-        List<MenuResponse> menuResponses = new ArrayList<>();
-
-        for (MenuStore m : mn) {
-            MenuResponse menuResponse = new MenuResponse(
-                    m.getPhone(),
-                    m.getMenu(),
-                    m.getPrice(),
-                    m.getId(),
-                    m.getCreatedDate(),
-                    m.getRestaurant().getRestaurantName(),
-                    m.getLimit(),
-                    m.getOrerCount()
-            );
-            menuResponses.add(menuResponse);
-        }
-        return menuResponses;
     }
 
     private List<MenuResponse> convertToResponse(List<MenuStore> menus) {
@@ -85,9 +64,9 @@ public class MenuService {
         return dp[a.length()][b.length()];
     }
 
-    public List<MenuResponse> getmenubySearch(String keyword) {
+    public List<MenuResponse> getmenubySearch(String keyword, String city) {
 
-        List<MenuStore> menus = menuStoreRepository.findActiveMenus();
+        List<MenuStore> menus = menuStoreRepository.findActiveMenus(city);
 
         if (keyword == null || keyword.trim().isEmpty()) {
             return convertToResponse(menus);
@@ -120,7 +99,6 @@ public class MenuService {
                 }
             }
         }
-
         return convertToResponse(filtered);
     }
 

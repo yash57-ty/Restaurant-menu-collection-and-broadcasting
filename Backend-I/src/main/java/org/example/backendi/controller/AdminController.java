@@ -1,6 +1,5 @@
 package org.example.backendi.controller;
 
-import org.example.backendi.model.Restaurant;
 import org.example.backendi.model.dto.AdminResponse;
 import org.example.backendi.model.dto.RestaurantRequest;
 import org.example.backendi.service.AdminService;
@@ -19,14 +18,17 @@ public class AdminController {
     AdminService adminService;
 
     @PostMapping("/addRestaurant")
-    public ResponseEntity<?> addRestaurantController(@RequestBody RestaurantRequest restaurantRequest) {
+    public ResponseEntity<?> addRestaurantController(
+            @RequestBody RestaurantRequest restaurantRequest
+    ) {
         return adminService.addRestaurant(restaurantRequest);
     }
 
     @GetMapping("/getRestaurant")
     public List<AdminResponse> getAllRestaurantController(
+
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "8") int size,
             @RequestParam(required = false) String month
     ) {
         return adminService.getRestaurant(page, size, month);

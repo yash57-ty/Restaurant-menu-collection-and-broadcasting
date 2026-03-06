@@ -21,12 +21,16 @@ public class MenuController {
     MenuService menuService;
     @Autowired
     private orderService orderService;
+
     @GetMapping("api/message")
     public List<MenuResponse> getMenus(
-            @RequestParam(required = false) String keyword
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String city
     ) {
-        return menuService.getmenubySearch(keyword);
+        return menuService.getmenubySearch(keyword, city);
     }
+
+
     @PostMapping("api/response")
     public ResponseEntity<?> fetchdata(
             @RequestBody orderRequest request,

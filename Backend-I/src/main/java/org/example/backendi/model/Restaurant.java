@@ -20,4 +20,6 @@ public class Restaurant {
     @Column(unique = true, nullable = false)
     private String phone;
     private String RestaurantName;
+    @Column(nullable = true)
+    private String City;
 }

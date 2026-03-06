@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@CrossOrigin("")
+@CrossOrigin(origins="http://localhost:5173, https://nakita-unfrequentative-buckishly.ngrok")
 @RequestMapping("/webhook")
 public class RestaurantController {
     private static final String VERIFY_TOKEN = "my_verify_token";
@@ -69,5 +71,10 @@ public class RestaurantController {
             e.printStackTrace();
         }
         return ResponseEntity.ok("EVENT_RECEIVED");
+    }
+
+    @GetMapping("api/cities")
+    List<String> fetchcity(){
+        return restaurantService.fetchcity();
     }
 }

@@ -58,20 +58,19 @@ public class AdminService {
 
             int updatedRevenue = existing.totalPrice() + revenue;
             int updatedOrder = existing.totalOrderCount() + order;
+            int profit = updatedOrder * 2;
 
             resultMap.put(
                     restaurantId,
                     new AdminResponse(
                             existing.name(),
                             updatedRevenue,
-                            updatedOrder
+                            updatedOrder,
+                            profit
                     )
             );
         }
         return new ArrayList<>(resultMap.values());
 
     }
-
-
-
 }

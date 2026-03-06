@@ -106,6 +106,7 @@ function Admin() {
               <th className="px-6 py-4">Restaurant</th>
               <th className="px-6 py-4">Orders</th>
               <th className="px-6 py-4">Revenue</th>
+              <th className="px-6 py-4">Profit</th>
               <th className="px-6 py-4">Performance</th>
             </tr>
           </thead>
@@ -126,6 +127,10 @@ function Admin() {
 
                 <td className="px-6 py-4 text-red-500 font-semibold">
                   ₹ {r.totalPrice}
+                </td>
+
+                <td className="px-6 py-4 text-green-600 font-semibold">
+                  ₹ {r.profit}
                 </td>
 
                 <td className="px-6 py-4">

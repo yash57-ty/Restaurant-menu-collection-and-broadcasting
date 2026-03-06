@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 function Admin() {
   const [restaurants, setRestaurants] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [month, setMonth] = useState("");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -22,7 +23,7 @@ function Admin() {
 
   const fetchRestaurant = async () => {
     try {
-      const res = await fetch(`http://localhost:8080/admin/getRestaurant?page=${page}&size=${pageSize}`);
+      const res = await fetch(`http://localhost:8080/admin/getRestaurant?page=${page}&size=${pageSize}&month=${month}`);
       const data = await res.json();
       setRestaurants(data);
     } catch (error) {
@@ -53,7 +54,7 @@ function Admin() {
     }, 4000);
 
     return () => clearInterval(interval); 
-  }, [page]);
+  }, [page, month]);
 
   const totalOrders = restaurants.reduce(
     (sum, r) => sum + r.totalOrderCount,
@@ -67,7 +68,23 @@ function Admin() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50 p-8">
-      {/* Summary Cards */}
+
+      <div className="mb-6 flex items-center gap-4">
+        <label className="font-semibold text-gray-700">
+          Select Month:
+        </label>
+
+        <input
+          type="month"
+          value={month}
+          onChange={(e) => {
+            setMonth(e.target.value);
+            setPage(0);
+          }}
+          className="border rounded-lg px-3 py-2"
+        />
+      </div>
+
       <div className="grid md:grid-cols-3 gap-6 mb-12">
 
         <div className="bg-white p-6 rounded-2xl shadow-md border border-orange-100">

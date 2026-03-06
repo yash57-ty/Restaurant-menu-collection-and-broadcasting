@@ -32,7 +32,7 @@ public class AdminService {
         return ResponseEntity.ok().build();
     }
 
-    public List<AdminResponse> getRestaurant(int page, int size) {
+    public List<AdminResponse> getRestaurant(int page, int size String month) {
 
         List<Restaurant> restaurants = restaurantRepository.findAll();
 
@@ -52,6 +52,7 @@ public class AdminService {
                     new AdminResponse(
                             restaurant.getRestaurantName(),
                             0,
+                            0,
                             0
                     )
             );
@@ -59,6 +60,17 @@ public class AdminService {
 
         for (MenuStore menuStore : menuStores) {
             Long restaurantId = menuStore.getRestaurant().getId();
+
+            if (!resultMap.containsKey(restaurantId)) continue;
+
+            if (month != null && !month.isEmpty()) {
+
+                String menuMonth = menuStore.getCreatedDate().toString().substring(0, 7);
+
+                if (!menuMonth.equals(month)) {
+                    continue;
+                }
+            }
 
             int order = menuStore.getOrerCount();
             int revenue = order * menuStore.getPrice();

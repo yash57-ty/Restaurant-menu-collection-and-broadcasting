@@ -32,9 +32,18 @@ public class AdminService {
         return ResponseEntity.ok().build();
     }
 
-    public List<AdminResponse> getRestaurant() {
+    public List<AdminResponse> getRestaurant(int page, int size) {
 
         List<Restaurant> restaurants = restaurantRepository.findAll();
+
+        int start = page * size;
+        int end = Math.min(start + size, restaurants.size());
+
+        if(start >= restaurants.size()){
+            return new ArrayList<>();
+        }
+        List<Restaurant> pagedRestaurant = restaurants.subList(start, end);
+
         List<MenuStore> menuStores = menuStoreRepository.findAll();
         HashMap<Long, AdminResponse> resultMap = new HashMap<>();
         for (Restaurant restaurant : restaurants) {

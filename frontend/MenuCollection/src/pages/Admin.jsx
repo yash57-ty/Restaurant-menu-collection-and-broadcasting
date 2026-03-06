@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 
 function Admin() {
   const [restaurants, setRestaurants] = useState([]);
-    const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
     Phone: "",
     RestaurantName: ""
   });
+
+  const [page, setPage] = useState(0);
+  const pageSize = 10;
 
   const handleChange = (e) => {
     setFormData({
@@ -19,7 +22,7 @@ function Admin() {
 
   const fetchRestaurant = async () => {
     try {
-      const res = await fetch("http://localhost:8080/admin/getRestaurant");
+      const res = await fetch(`http://localhost:8080/admin/getRestaurant?page=${page}&size=${pageSize}`);
       const data = await res.json();
       setRestaurants(data);
     } catch (error) {
@@ -39,7 +42,7 @@ function Admin() {
 
     setShowModal(false);
     setFormData({ name: "", Phone: "", RestaurantName: "" });
-    fetchRestaurant(); // refresh list
+    fetchRestaurant(); 
   };
 
   useEffect(() => {
@@ -49,8 +52,8 @@ function Admin() {
       fetchRestaurant();
     }, 4000);
 
-    return () => clearInterval(interval); // cleanup
-  }, []);
+    return () => clearInterval(interval); 
+  }, [page]);
 
   const totalOrders = restaurants.reduce(
     (sum, r) => sum + r.totalOrderCount,
@@ -149,6 +152,28 @@ function Admin() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="flex justify-center items-center gap-4 mt-6">
+
+        <button
+          onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
+          className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+        >
+          Previous
+        </button>
+
+        <span className="font-semibold">
+          Page {page + 1}
+        </span>
+
+        <button
+          onClick={() => setPage((prev) => prev + 1)}
+          className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+        >
+          Next
+        </button>
+
       </div>
 
       <div className="mt-12 text-right">

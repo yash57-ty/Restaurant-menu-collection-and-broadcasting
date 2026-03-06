@@ -24,7 +24,10 @@ public class AdminController {
     }
 
     @GetMapping("/getRestaurant")
-    public List<AdminResponse> getAllRestaurantController() {
-        return adminService.getRestaurant();
+    public List<AdminResponse> getAllRestaurantController(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return adminService.getRestaurant(page, size);
     }
 }

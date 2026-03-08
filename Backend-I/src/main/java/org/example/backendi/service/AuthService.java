@@ -23,6 +23,7 @@ public class AuthService {
         User user = new User();
         user.setName(request.name());
         user.setPhone(request.phone());
+        user.setEmail(request.email());
         user.setRole("User");
         user.setPassword(request.password());
 

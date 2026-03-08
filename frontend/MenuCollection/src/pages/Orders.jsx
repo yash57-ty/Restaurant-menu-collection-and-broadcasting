@@ -79,11 +79,8 @@ function Orders() {
           }),
         }
       );
-
       if (!res.ok) throw new Error("Cancel failed");
-
       alert("Order updated successfully");
-
       setShowCancelModal(false);
       fetchOrders();
 

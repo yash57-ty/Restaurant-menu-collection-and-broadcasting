@@ -12,4 +12,5 @@ import java.util.List;
 public interface orderRepo extends JpaRepository<Order,Long>{
     boolean existsByUserAndMenuStore(User user, MenuStore menuStore);
     List<Order> findByUser(User user);
+    List<Order> findByMenuStore(MenuStore menuStore);
 }

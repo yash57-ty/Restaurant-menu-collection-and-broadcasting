@@ -97,13 +97,10 @@ public class orderService {
     public List<OrderResponse> getOrdersByUser(String userPhone) {
 
         User user = userRepository.findByPhone(userPhone);
-
         if (user == null) {
             throw new IllegalArgumentException("User not found");
         }
-
         List<Order> orders = orderRepo.findByUser(user);
-
         return orders.stream()
                 .map(order -> new OrderResponse(
                         order.getId(),

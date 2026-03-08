@@ -7,6 +7,7 @@ function Signup() {
     name: "",
     phone: "",
     password: "",
+    emial:""
   });
 
   const handleChange = (e) =>
@@ -83,6 +84,22 @@ function Signup() {
             name="password"
             type="password"
             placeholder="Password"
+            onChange={handleChange}
+            className="
+              w-full px-4 py-2.5
+              border border-orange-200
+              rounded-xl
+              focus:outline-none
+              focus:ring-2 focus:ring-red-300
+              focus:border-red-400
+              transition
+            "
+          />
+
+          <input
+            name="email"
+            type="text"
+            placeholder="enter email"
             onChange={handleChange}
             className="
               w-full px-4 py-2.5

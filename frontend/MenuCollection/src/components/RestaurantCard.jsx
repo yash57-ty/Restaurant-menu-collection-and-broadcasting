@@ -1,99 +1,99 @@
 export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
+
+  // Check if restaurant has reached its order limit
   const isLimitReached = restaurant.orderCount >= restaurant.limit;
 
   return (
+
+    // Main card container showing restaurant and menu information
     <div
       onClick={!disabled && !isLimitReached ? onSelect : undefined}
       className={`
         w-full flex flex-col
-        bg-white
-        rounded-2xl p-6
-        transition-all duration-300
-        shadow-md hover:shadow-xl hover:scale-[1.02]
-        border border-orange-100
+        bg-white border p-5
         ${
           isLimitReached || disabled
             ? "opacity-60 cursor-not-allowed"
             : "cursor-pointer"
         }
-        ${
-          isSelected
-            ? "ring-2 ring-red-400 border-red-400"
-            : ""
-        }
       `}
     >
-      {/* Restaurant Name */}
-      <h3 className="text-xl font-bold mb-3 text-gray-800 tracking-wide">
+
+      {/* Restaurant name */}
+      <h3 className="text-lg font-bold text-gray-800 mb-2">
         {restaurant.RestaurantName}
       </h3>
 
-      {/* Menu Description */}
-      <pre
-        className="
-          whitespace-pre-wrap
-          text-gray-600 text-sm leading-relaxed
-          bg-orange-50
-          rounded-xl p-4 mb-4
-          border border-orange-100
-        "
-      >
+
+      {/* Menu description sent by restaurant */}
+      <pre className="whitespace-pre-wrap text-base font-medium text-gray-800 border p-3 mb-3 bg-gray-50">
         {restaurant.message}
       </pre>
 
-      {/* Order Count */}
-      <div className="flex justify-between items-center mb-3 text-sm">
-        <span className="text-gray-700 font-medium">
-          Orders: {restaurant.orderCount} / {restaurant.limit}
+      {/* Shows how many orders are already placed */}
+      <div className="flex justify-between text-sm mb-3">
+
+        <span>
+          <b>Orders:</b> {restaurant.orderCount} / {restaurant.limit}
         </span>
 
+        {/* Message shown when order limit is reached */}
         {isLimitReached && (
-          <span className="text-red-500 font-semibold text-xs">
-            Order limit reached
+          <span className="text-red-500 font-bold">
+            Orders Closed
           </span>
         )}
+
       </div>
 
-      {/* Price + Created Date */}
-      <div className="flex items-center justify-between mb-6">
-        <span className="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-bold shadow-sm">
+
+      {/* Price and menu creation time */}
+      <div className="flex justify-between items-center mb-4">
+
+        <span className="font-bold text-red-500">
           ₹ {restaurant.price}
         </span>
 
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-gray-600">
           {new Date(restaurant.createdDate).toLocaleString()}
         </span>
+
       </div>
 
-      {/* Action Button */}
-      <div className="mt-auto">
-        <button
-          type="button"
-          disabled={isLimitReached || disabled}
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!isLimitReached && !disabled) onSelect();
-          }}
-          className={`
-            w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-300
-            ${
-              isLimitReached
-                ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                : isSelected
-                ? "bg-red-500 text-white"
-                : "bg-gradient-to-r from-red-500 to-amber-500 text-white hover:opacity-90"
-            }
-          `}
-        >
-          
-          {isLimitReached
-            ? "Orders Closed"
-            : isSelected
-            ? "✔ Selected"
-            : "Select Restaurant"}
 
-        </button>
-      </div>
+      {/* Button used to select restaurant for placing order */}
+      <button
+        type="button"
+        disabled={isLimitReached || disabled}
+        onClick={(e) => {
+
+          e.stopPropagation();
+
+          if (!isLimitReached && !disabled) {
+            onSelect();
+          }
+
+        }}
+        className={`
+          w-full py-2 font-bold
+          ${
+            isLimitReached
+              ? "bg-gray-300 text-gray-600"
+              : isSelected
+              ? "bg-red-500 text-white"
+              : "bg-red-500 text-white"
+          }
+        `}
+      >
+
+        {isLimitReached
+          ? "Orders Closed"
+          : isSelected
+          ? "Selected"
+          : "Select Restaurant"}
+
+      </button>
+
     </div>
   );
 }

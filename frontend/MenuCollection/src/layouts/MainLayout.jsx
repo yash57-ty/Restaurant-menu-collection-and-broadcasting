@@ -51,7 +51,7 @@ export default function MainLayout({ children }) {
             {/* Home button redirects to the correct dashboard depending on role */}
             <Link
               to={homePath}
-              className="text-base font-bold text-gray-700 hover:text-red-500"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-500 transition-all duration-200"
             >
               Home
             </Link>
@@ -59,7 +59,7 @@ export default function MainLayout({ children }) {
             {/* Orders page shows the user's previous orders */}
             <Link
               to="/orders"
-              className="text-base font-bold text-gray-700 hover:text-red-500"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-red-50 hover:text-red-500 transition-all duration-200 "
             >
               Orders
             </Link>

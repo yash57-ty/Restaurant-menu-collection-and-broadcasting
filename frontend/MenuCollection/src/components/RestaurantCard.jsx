@@ -20,13 +20,13 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     >
 
       {/* Restaurant name */}
-      <h3 className="text-lg font-bold text-gray-800 mb-2">
+      <h3 className="text-lg font-bold text-red-500 mb-2">
         {restaurant.RestaurantName}
       </h3>
 
 
       {/* Menu description sent by restaurant */}
-      <pre className="whitespace-pre-wrap text-base font-medium text-gray-800 border p-3 mb-3 bg-gray-50">
+      <pre className="whitespace-pre-wrap text-base font-medium text-gray-800 border p-3 mb-3 bg-gray-50 font-sans">
         {restaurant.message}
       </pre>
 

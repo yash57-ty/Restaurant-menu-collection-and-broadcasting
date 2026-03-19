@@ -5,10 +5,8 @@ import ResponseModal from "../components/ResponseModal";
 
 export function MenuPage() {
 
-  // Used to navigate between pages
   const navigate = useNavigate();
 
-  // Controls whether the order modal is visible
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Stores the restaurant selected by the user
@@ -222,7 +220,7 @@ export function MenuPage() {
           <div>
 
             <label className="font-bold text-gray-700">
-              Search Menu
+              Search Menu : 
             </label>
 
             <input
@@ -240,9 +238,8 @@ export function MenuPage() {
           <div className="relative">
 
             <label className="font-bold text-gray-700">
-              City
+              City : 
             </label>
-
             <input
               type="text"
               placeholder="Select city"

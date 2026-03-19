@@ -24,7 +24,6 @@ public class RestaurantController {
             @RequestParam("hub.mode") String mode,
             @RequestParam("hub.verify_token") String token,
             @RequestParam("hub.challenge") String challenge) {
-
         if ("subscribe".equals(mode) && VERIFY_TOKEN.equals(token)) {
             System.out.println("Webhook verified successfully");
             return ResponseEntity.ok(challenge);

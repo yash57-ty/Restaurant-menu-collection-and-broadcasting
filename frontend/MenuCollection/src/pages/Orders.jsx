@@ -2,30 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Orders() {
-
-  // Stores all orders of the logged-in user
   const [orders, setOrders] = useState([]);
-
-  // Used to show loading message while fetching data
   const [loading, setLoading] = useState(true);
-
-  // Controls visibility of cancel order modal
   const [showCancelModal, setShowCancelModal] = useState(false);
-
-  // Stores the order currently selected for cancellation
   const [selectedOrder, setSelectedOrder] = useState(null);
-
-  // Quantity user wants to cancel
   const [cancelQty, setCancelQty] = useState("");
 
   const navigate = useNavigate();
 
-
-  // Fetch orders from backend
   const fetchOrders = async () => {
-
     try {
-
       const res = await fetch("http://localhost:8080/api/orders", {
         headers: {
           "X-USER-PHONE": localStorage.getItem("userPhone"),
@@ -36,7 +22,6 @@ function Orders() {
 
       const data = await res.json();
 
-      // Sort orders so latest orders appear first
       const sortedOrders = [...data].sort(
         (a, b) => new Date(b.orderedAt) - new Date(a.orderedAt)
       );
@@ -44,59 +29,42 @@ function Orders() {
       setOrders(sortedOrders);
 
     } catch (err) {
-
       console.error(err);
       alert("Error loading orders");
-
     } finally {
-
       setLoading(false);
-
     }
   };
 
-
-  // Fetch orders when the page loads
   useEffect(() => {
     fetchOrders();
   }, []);
 
-
-  // Calculates total amount spent by the user
   const totalSpent = orders.reduce(
     (sum, order) => sum + order.totalAmount,
     0
   );
 
-
-  // Opens cancel modal for a selected order
   const openCancelModal = (order) => {
-
     setSelectedOrder(order);
     setCancelQty("");
     setShowCancelModal(true);
-
   };
 
-
-  // Sends cancel request to backend
   const handleCancelSubmit = async () => {
-
     const qty = parseInt(cancelQty);
 
-    // Validate cancel quantity
     if (!qty || qty <= 0) {
       alert("Enter valid quantity");
       return;
     }
 
     if (qty > selectedOrder.quantity) {
-      alert("You cannot cancel more than ordered quantity");
+      alert("Cannot cancel more than ordered");
       return;
     }
 
     try {
-
       const res = await fetch(
         `http://localhost:8080/api/orders/${selectedOrder.orderId}/cancel`,
         {
@@ -105,209 +73,173 @@ function Orders() {
             "Content-Type": "application/json",
             "X-USER-PHONE": localStorage.getItem("userPhone"),
           },
-          body: JSON.stringify({
-            cancelQuantity: qty,
-          }),
+          body: JSON.stringify({ cancelQuantity: qty }),
         }
       );
 
       if (!res.ok) throw new Error("Cancel failed");
 
-      alert("Order updated successfully");
-
       setShowCancelModal(false);
-
       fetchOrders();
 
     } catch (err) {
-
       console.error(err);
       alert("Error cancelling order");
-
     }
   };
 
-
   return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-amber-100">
 
-    // Main container for orders page
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+      <div className="max-w-5xl mx-auto px-4 md:px-6 py-8">
 
-      <div className="max-w-6xl mx-auto px-6 py-10">
-
-        {/* Page title */}
+        {/* Header */}
         <div className="mb-8">
-
-          <h2 className="text-3xl font-extrabold text-gray-800">
-            Your Orders
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
+            Your Orders 📦
           </h2>
-
-          <p className="text-gray-600">
-            View and manage your previous orders.
+          <p className="text-gray-500">
+            Track and manage your food orders.
           </p>
-
         </div>
 
-
-        {/* Summary showing order count and total spent */}
+        {/* Summary */}
         {!loading && orders.length > 0 && (
+          <div className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-md p-5 mb-8 grid grid-cols-2 gap-4">
 
-          <div className="bg-white border rounded p-4 mb-8">
+            <div>
+              <p className="text-sm text-gray-500">Total Orders</p>
+              <p className="text-xl font-semibold">{orders.length}</p>
+            </div>
 
-            <div className="grid sm:grid-cols-2 gap-4">
-
-              <div>
-                <p className="text-gray-600 text-sm">Total Orders</p>
-                <p className="text-xl font-bold">{orders.length}</p>
-              </div>
-
-              <div>
-                <p className="text-gray-600 text-sm">Total Spent</p>
-                <p className="text-xl font-bold text-red-500">
-                  ₹ {totalSpent}
-                </p>
-              </div>
-
+            <div>
+              <p className="text-sm text-gray-500">Total Spent</p>
+              <p className="text-xl font-semibold text-orange-600">
+                ₹ {totalSpent}
+              </p>
             </div>
 
           </div>
-
         )}
 
-
-        {/* Loading message */}
+        {/* Loading */}
         {loading && (
-          <p className="text-gray-600">
-            Loading orders...
-          </p>
+          <p className="text-gray-500">Loading orders...</p>
         )}
 
-
-        {/* Message if user has not placed any orders */}
+        {/* Empty */}
         {!loading && orders.length === 0 && (
-
-          <div className="bg-white border p-6 text-center">
-
-            <p className="text-gray-600">
-              You have not placed any orders yet.
+          <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-8 text-center shadow">
+            <p className="text-gray-500 mb-4">
+              No orders yet 🍽️
             </p>
-
+            <button
+              onClick={() => navigate("/menus")}
+              className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-xl"
+            >
+              Browse Food
+            </button>
           </div>
-
         )}
 
-
-        {/* List of orders */}
-        <div className="space-y-4">
+        {/* Orders List */}
+        <div className="space-y-5">
 
           {orders.map((order) => (
-
             <div
               key={order.id}
-              className="bg-white border p-4"
+              className="bg-white/70 backdrop-blur-lg rounded-2xl p-5 shadow-md"
             >
 
-              {/* Restaurant name and order time */}
-              <div className="flex justify-between mb-2">
-
-                <h3 className="font-bold text-gray-800">
+              {/* Top Row */}
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-semibold text-gray-900">
                   {order.restaurantName}
                 </h3>
-
-                <span className="text-sm text-gray-600">
+                <span className="text-xs text-gray-500">
                   {new Date(order.orderedAt).toLocaleString()}
                 </span>
+              </div>
+
+              {/* Details */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm mb-4">
+
+                <div>
+                  <p className="text-gray-500">Quantity</p>
+                  <p className="font-medium">{order.quantity}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-500">Price</p>
+                  <p className="font-medium">₹ {order.pricePerItem}</p>
+                </div>
+
+                <div>
+                  <p className="text-gray-500">Total</p>
+                  <p className="font-semibold text-orange-600">
+                    ₹ {order.totalAmount}
+                  </p>
+                </div>
 
               </div>
 
-
-              {/* Order details */}
-              <div className="grid sm:grid-cols-3 gap-4 text-sm">
-
-                <p>
-                  <b>Quantity:</b> {order.quantity}
-                </p>
-
-                <p>
-                  <b>Price:</b> ₹ {order.pricePerItem}
-                </p>
-
-                <p className="font-bold text-red-500">
-                  Total: ₹ {order.totalAmount}
-                </p>
-
-              </div>
-
-
-              {/* Cancel order button */}
-              <div className="mt-3 flex justify-end">
-
+              {/* Action */}
+              <div className="flex justify-end">
                 <button
                   onClick={() => openCancelModal(order)}
-                  className="bg-red-500 text-white px-4 py-2 rounded font-bold"
+                  className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl text-sm"
                 >
                   Cancel Order
                 </button>
-
               </div>
 
             </div>
-
           ))}
 
         </div>
 
       </div>
 
-
-      {/* Modal used for cancelling orders */}
+      {/* Modal */}
       {showCancelModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center px-4">
 
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
 
-          <div className="bg-white border p-6 w-80">
-
-            <h3 className="font-bold mb-3">
+            <h3 className="text-lg font-semibold mb-4">
               Cancel Order
             </h3>
 
-            <p className="text-sm mb-3">
-              Ordered Quantity: {selectedOrder.quantity}
+            <p className="text-sm text-gray-500 mb-3">
+              Ordered: {selectedOrder.quantity}
             </p>
 
-            {/* Input for cancel quantity */}
             <input
               type="number"
               value={cancelQty}
               onChange={(e) => setCancelQty(e.target.value)}
               placeholder="Enter quantity"
-              className="w-full border px-3 py-2 mb-4"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none mb-4"
             />
 
             <div className="flex justify-end gap-3">
-
-              {/* Close modal button */}
               <button
                 onClick={() => setShowCancelModal(false)}
-                className="px-4 py-2 border"
+                className="px-4 py-2 rounded-xl border hover:bg-gray-100"
               >
                 Close
               </button>
 
-              {/* Confirm cancel button */}
               <button
                 onClick={handleCancelSubmit}
-                className="px-4 py-2 bg-red-500 text-white font-bold"
+                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-xl"
               >
                 Confirm
               </button>
-
             </div>
 
           </div>
-
         </div>
-
       )}
 
     </div>

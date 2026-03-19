@@ -10,40 +10,23 @@ function ResponseModal({
   onClose,
   onSubmit,
 }) {
-
-  // Stores delivery address entered by user
   const [address, setAddress] = useState("");
-
-  // Stores quantity selected by user
   const [quantity, setQuantity] = useState(1);
-
-  // Stores validation errors for inputs
   const [errors, setErrors] = useState({});
 
-
-  // Reset form values every time modal opens
   useEffect(() => {
-
     if (isOpen) {
       setQuantity(1);
       setAddress("");
       setErrors({});
     }
-
   }, [isOpen]);
 
-
-  // Do not render modal if it is closed
   if (!isOpen) return null;
 
-
-  // Calculates total amount for the order
   const totalAmount = price * quantity;
 
-
-  // Validates user input before submitting order
   const validate = () => {
-
     const newErrors = {};
 
     if (!address.trim()) {
@@ -52,29 +35,19 @@ function ResponseModal({
 
     if (!quantity || isNaN(quantity)) {
       newErrors.quantity = "Quantity is required";
-    }
-
-    else if (!Number.isInteger(quantity)) {
-      newErrors.quantity = "Quantity must be a whole number";
-    }
-
-    else if (quantity < 1) {
-      newErrors.quantity = "Minimum quantity is 1";
-    }
-
-    else if (quantity > remainingSlots) {
-      newErrors.quantity = `Maximum available is ${remainingSlots}`;
+    } else if (!Number.isInteger(quantity)) {
+      newErrors.quantity = "Must be a whole number";
+    } else if (quantity < 1) {
+      newErrors.quantity = "Minimum is 1";
+    } else if (quantity > remainingSlots) {
+      newErrors.quantity = `Max available: ${remainingSlots}`;
     }
 
     setErrors(newErrors);
-
     return Object.keys(newErrors).length === 0;
   };
 
-
-  // Called when user clicks Place Order
   const handleSubmit = () => {
-
     if (!validate()) return;
 
     onSubmit({
@@ -86,104 +59,103 @@ function ResponseModal({
     onClose();
   };
 
-
   return (
+    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center px-4 z-50">
 
-    // Background overlay for modal
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+      {/* Modal */}
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
 
-      {/* Modal container */}
-      <div className="bg-white border p-6 w-full max-w-md">
-
-        {/* Title of the order confirmation */}
-        <h3 className="text-xl font-bold mb-4">
-          Confirm Order - {restaurantName}
-        </h3>
-
-
-        {/* Quantity input field */}
-        <label className="font-bold">Quantity</label>
-
-        <input
-          type="number"
-          min="1"
-          max={remainingSlots}
-          value={quantity}
-          onChange={(e) => {
-
-            let value = e.target.value;
-
-            // Remove leading zeros
-            value = value.replace(/^0+/, "");
-
-            if (value === "") {
-              setQuantity("");
-              return;
-            }
-
-            const num = Number(value);
-
-            if (!isNaN(num)) {
-              setQuantity(num);
-            }
-
-          }}
-          className="w-full border px-3 py-2 mt-1 mb-2"
-        />
-
-        {/* Display quantity validation error */}
-        {errors.quantity && (
-          <p className="text-red-500 text-sm mb-2">
-            {errors.quantity}
+        {/* Header */}
+        <div className="mb-5">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Confirm Order 🍽️
+          </h3>
+          <p className="text-sm text-gray-500">
+            {restaurantName}
           </p>
-        )}
-
-        {/* Shows how many order slots remain */}
-        <p className="text-sm text-gray-600 mb-3">
-          Available slots: {remainingSlots}
-        </p>
-
-
-        {/* Address input field */}
-        <label className="font-bold">Delivery Address</label>
-
-        <textarea
-          placeholder="Enter address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-          className="w-full border px-3 py-2 mt-1 mb-2"
-        />
-
-        {/* Display address validation error */}
-        {errors.address && (
-          <p className="text-red-500 text-sm mb-2">
-            {errors.address}
-          </p>
-        )}
-
-
-        {/* Total amount calculated for the order */}
-        <div className="font-bold text-red-500 mb-4">
-          Total: ₹ {totalAmount}
         </div>
 
+        {/* Quantity */}
+        <div className="mb-4">
+          <label className="text-sm font-medium text-gray-700">
+            Quantity
+          </label>
+          <input
+            type="number"
+            min="1"
+            max={remainingSlots}
+            value={quantity}
+            onChange={(e) => {
+              let value = e.target.value.replace(/^0+/, "");
+              if (value === "") return setQuantity("");
+              const num = Number(value);
+              if (!isNaN(num)) setQuantity(num);
+            }}
+            className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none"
+          />
+          {errors.quantity && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.quantity}
+            </p>
+          )}
 
-        {/* Buttons to cancel or confirm order */}
+          <p className="text-xs text-gray-500 mt-1">
+            Available: {remainingSlots}
+          </p>
+        </div>
+
+        {/* Address */}
+        <div className="mb-4">
+          <label className="text-sm font-medium text-gray-700">
+            Delivery Address
+          </label>
+          <textarea
+            placeholder="Enter full address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none"
+          />
+          {errors.address && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.address}
+            </p>
+          )}
+        </div>
+
+        {/* Order Summary */}
+        <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 mb-5">
+
+          <div className="flex justify-between text-sm mb-1">
+            <span>Price</span>
+            <span>₹ {price}</span>
+          </div>
+
+          <div className="flex justify-between text-sm mb-1">
+            <span>Quantity</span>
+            <span>x {quantity}</span>
+          </div>
+
+          <div className="flex justify-between font-semibold text-orange-600 mt-2">
+            <span>Total</span>
+            <span>₹ {totalAmount}</span>
+          </div>
+
+        </div>
+
+        {/* Actions */}
         <div className="flex justify-end gap-3">
 
-          {/* Close modal */}
           <button
             onClick={onClose}
-            className="px-4 py-2 border"
+            className="px-4 py-2 rounded-xl border hover:bg-gray-100"
           >
             Cancel
           </button>
 
-          {/* Submit order */}
           <button
             disabled={submitting}
             onClick={handleSubmit}
-            className="px-4 py-2 bg-red-500 text-white font-bold"
+            className="px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold"
           >
             {submitting ? "Placing..." : "Place Order"}
           </button>
@@ -191,7 +163,6 @@ function ResponseModal({
         </div>
 
       </div>
-
     </div>
   );
 }

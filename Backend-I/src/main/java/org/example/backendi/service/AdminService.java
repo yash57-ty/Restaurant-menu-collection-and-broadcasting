@@ -9,7 +9,6 @@ import org.example.backendi.repo.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
 
 @Service
@@ -103,7 +102,6 @@ public class AdminService {
         if (start >= allRestaurants.size()) {
             return new ArrayList<>();
         }
-
         return allRestaurants.subList(start, end);
     }
 }

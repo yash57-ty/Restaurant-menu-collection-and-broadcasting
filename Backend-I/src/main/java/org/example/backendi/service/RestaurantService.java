@@ -94,7 +94,6 @@ public class RestaurantService {
                     }
                 }
 
-                // update menu order count (important for admin math)
                 int remain = m.getOrerCount() - totalCancelled;
                 if(remain < 0){
                     remain = 0;
@@ -102,7 +101,6 @@ public class RestaurantService {
 
                 m.setOrerCount(remain);
 
-                // expire the menu
                 m.setExpiresAt(Instant.now());
 
                 menuStoreRepository.save(m);
@@ -119,11 +117,7 @@ public class RestaurantService {
                 return;
             }
 
-            /*
-            ============================
-            SESSION CREATION
-            ============================
-            */
+
 
             if (menu_session == null) {
 
@@ -167,12 +161,9 @@ public class RestaurantService {
                 case "WAITING_PRICE":
 
                     try {
-
                         menu_session.setPrice(Integer.parseInt(text));
                         menu_session.setCurrent_status("WAITING_LIMIT");
-
                         menusessionRepo.save(menu_session);
-
                         wap.sendText(phone, "⚠ Please enter order limit");
 
                     } catch (NumberFormatException e) {
@@ -232,16 +223,13 @@ public class RestaurantService {
 
                             return;
                         }
-
                         menuExpiry = expiryZdt.toInstant();
-
                         menu_session.setTime(text);
                         menu_session.setCurrent_status("COMPLETED");
 
                         menusessionRepo.save(menu_session);
 
                         MenuStore store = new MenuStore();
-
                         store.setMenu(menu_session.getMessage());
                         store.setPrice(menu_session.getPrice());
                         store.setLimit(menu_session.getLimit());
@@ -287,15 +275,11 @@ public class RestaurantService {
         HashSet<String> citiesSet = new HashSet<>();
 
         for (Restaurant restaurant : cities) {
-
             if (!citiesSet.contains(restaurant.getCity())) {
-
                 citiesName.add(restaurant.getCity());
                 citiesSet.add(restaurant.getCity());
-
             }
         }
-
         return citiesName;
     }
 }

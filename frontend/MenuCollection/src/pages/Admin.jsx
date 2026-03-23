@@ -1,31 +1,18 @@
 import React, { useState, useEffect } from "react";
 
 function Admin() {
-
-  // Stores the list of restaurants received from backend
   const [restaurants, setRestaurants] = useState([]);
-
-  // Controls whether the "Add Restaurant" modal is visible
   const [showModal, setShowModal] = useState(false);
-
-  // Stores the selected month used for analytics filtering
   const [month, setMonth] = useState("");
-
-  // Stores form data when admin adds a new restaurant
   const [formData, setFormData] = useState({
     name: "",
     Phone: "",
     RestaurantName: "",
     City: ""
   });
-
-  // Current pagination page
   const [page, setPage] = useState(0);
-
-  // Number of restaurants loaded per page
   const pageSize = 8;
 
-  // Updates form fields when the admin types in the modal form
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -33,24 +20,18 @@ function Admin() {
     });
   };
 
-  // Fetch restaurant analytics from backend with pagination and month filter
   const fetchRestaurant = async () => {
     try {
-
       const res = await fetch(
         `http://localhost:8080/admin/getRestaurant?page=${page}&size=${pageSize}&month=${month}`
       );
-
       const data = await res.json();
-
       setRestaurants(data);
-
     } catch (error) {
       console.error("Error fetching restaurants:", error);
     }
   };
 
-  // Sends request to backend to create a new restaurant
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -62,7 +43,6 @@ function Admin() {
       body: JSON.stringify(formData)
     });
 
-    // Close modal and refresh restaurant list
     setShowModal(false);
 
     setFormData({
@@ -75,49 +55,39 @@ function Admin() {
     fetchRestaurant();
   };
 
-  // Fetch restaurant data whenever page or month changes
   useEffect(() => {
-
     fetchRestaurant();
 
-    // Automatically refresh analytics every 4 seconds
     const interval = setInterval(() => {
       fetchRestaurant();
     }, 4000);
 
     return () => clearInterval(interval);
-
   }, [page, month]);
 
-  // Calculates total orders for summary cards
   const totalOrders = restaurants.reduce(
     (sum, r) => sum + r.totalOrderCount,
     0
   );
 
-  // Calculates total revenue for summary cards
   const totalRevenue = restaurants.reduce(
     (sum, r) => sum + r.totalPrice,
     0
   );
 
-  // Calculates total profit (each order generates ₹2)
   const totalProfit = restaurants.reduce(
     (sum, r) => sum + r.totalOrderCount * 2,
     0
   );
 
   return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-amber-100 p-4 md:p-8">
 
-    // Main page container
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-orange-50 p-8">
-
-      {/* Month selector used to filter analytics */}
-      <div className="mb-6 flex items-center gap-4">
-
-        <label className="font-bold text-gray-700">
-          Select Month:
-        </label>
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+          Admin Dashboard 📊
+        </h1>
 
         <input
           type="month"
@@ -126,223 +96,191 @@ function Admin() {
             setMonth(e.target.value);
             setPage(0);
           }}
-          className="border rounded-lg px-3 py-2"
+          className="px-4 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none"
         />
       </div>
 
-      {/* Summary analytics cards */}
-      <div className="grid md:grid-cols-4 gap-6 mb-10">
+      {/* Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10">
 
-        <div className="bg-white p-5 rounded-xl border">
-          <h3 className="text-sm text-gray-500">Total Restaurants</h3>
-          <p className="text-3xl font-extrabold text-gray-800">
+        <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow-md">
+          <p className="text-sm text-gray-500">Restaurants</p>
+          <h2 className="text-2xl font-bold text-gray-900">
             {restaurants.length}
-          </p>
+          </h2>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border">
-          <h3 className="text-sm text-gray-500">
-            Total Orders
-          </h3>
-          <p className="text-3xl font-extrabold text-gray-800">
+        <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow-md">
+          <p className="text-sm text-gray-500">Orders</p>
+          <h2 className="text-2xl font-bold text-gray-900">
             {totalOrders}
-          </p>
+          </h2>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border">
-          <h3 className="text-sm text-gray-500">Total Revenue</h3>
-          <p className="text-3xl font-extrabold text-red-500">
+        <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow-md">
+          <p className="text-sm text-gray-500">Revenue</p>
+          <h2 className="text-2xl font-bold text-orange-600">
             ₹ {totalRevenue}
-          </p>
+          </h2>
         </div>
 
-        <div className="bg-white p-5 rounded-xl border">
-          <h3 className="text-sm text-gray-500">Total Profit</h3>
-          <p className="text-3xl font-extrabold text-green-600">
+        <div className="bg-white/70 backdrop-blur-lg p-5 rounded-2xl shadow-md">
+          <p className="text-sm text-gray-500">Profit</p>
+          <h2 className="text-2xl font-bold text-green-600">
             ₹ {totalProfit}
-          </p>
+          </h2>
         </div>
 
       </div>
 
-      {/* Restaurant analytics table */}
-      <div className="bg-white rounded-xl border overflow-hidden">
+      {/* Table */}
+      <div className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-md overflow-hidden">
 
         <div className="p-5 border-b">
-          <h2 className="text-xl font-bold text-gray-800">
+          <h2 className="text-lg font-semibold text-gray-800">
             Restaurant Performance
           </h2>
         </div>
 
-        <table className="w-full text-left">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
 
-          <thead className="bg-orange-50 text-gray-700 text-sm font-bold">
-            <tr>
-              <th className="px-6 py-3">Restaurant</th>
-              <th className="px-6 py-3">Orders</th>
-              <th className="px-6 py-3">Revenue</th>
-              <th className="px-6 py-3">Profit</th>
-              <th className="px-6 py-3">Performance</th>
-            </tr>
-          </thead>
-
-          <tbody>
-
-            {restaurants.map((r, index) => (
-
-              <tr key={index} className="border-t">
-
-                <td className="px-6 py-3 font-bold text-gray-800">
-                  {r.name}
-                </td>
-
-                <td className="px-6 py-3 font-semibold">
-                  {r.totalOrderCount}
-                </td>
-
-                <td className="px-6 py-3 text-red-500 font-bold">
-                  ₹ {r.totalPrice}
-                </td>
-
-                <td className="px-6 py-3 text-green-600 font-bold">
-                  ₹ {r.profit}
-                </td>
-
-                <td className="px-6 py-3">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-
-                    <div
-                      className="bg-gradient-to-r from-red-500 to-amber-500 h-2 rounded-full"
-                      style={{
-                        width: totalOrders
-                          ? `${(r.totalOrderCount / totalOrders) * 100}%`
-                          : "0%"
-                      }}
-                    />
-
-                  </div>
-                </td>
-
+            <thead className="bg-orange-50 text-gray-700">
+              <tr>
+                <th className="px-6 py-3 text-left">Restaurant</th>
+                <th className="px-6 py-3">Orders</th>
+                <th className="px-6 py-3">Revenue</th>
+                <th className="px-6 py-3">Profit</th>
+                <th className="px-6 py-3">Performance</th>
               </tr>
+            </thead>
 
-            ))}
+            <tbody>
+              {restaurants.map((r, index) => (
+                <tr
+                  key={index}
+                  className="border-t hover:bg-orange-50 transition"
+                >
+                  <td className="px-6 py-4 font-semibold text-gray-800">
+                    {r.name}
+                  </td>
 
-          </tbody>
-        </table>
+                  <td className="px-6 py-4 text-center">
+                    {r.totalOrderCount}
+                  </td>
+
+                  <td className="px-6 py-4 text-center text-orange-600 font-semibold">
+                    ₹ {r.totalPrice}
+                  </td>
+
+                  <td className="px-6 py-4 text-center text-green-600 font-semibold">
+                    ₹ {r.profit}
+                  </td>
+
+                  <td className="px-6 py-4">
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-gradient-to-r from-orange-400 to-orange-600 h-2 rounded-full"
+                        style={{
+                          width: totalOrders
+                            ? `${(r.totalOrderCount / totalOrders) * 100}%`
+                            : "0%"
+                        }}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
+        </div>
       </div>
 
-      {/* Pagination controls */}
+      {/* Pagination */}
       <div className="flex justify-center items-center gap-4 mt-6">
 
         <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 0))}
-          className="px-4 py-2 border rounded-lg font-semibold"
+          className="px-4 py-2 rounded-xl border hover:bg-gray-100 transition"
         >
           Previous
         </button>
 
-        <span className="font-bold">
+        <span className="font-semibold text-gray-700">
           Page {page + 1}
         </span>
 
         <button
           onClick={() => setPage((prev) => prev + 1)}
-          className="px-4 py-2 border rounded-lg font-semibold"
+          className="px-4 py-2 rounded-xl border hover:bg-gray-100 transition"
         >
           Next
         </button>
 
       </div>
 
-      {/* Button to open modal for adding a restaurant */}
+      {/* Add Button */}
       <div className="mt-10 text-right">
-
         <button
           onClick={() => setShowModal(true)}
-          className="bg-red-500 text-white px-6 py-2 rounded-lg font-bold"
+          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-semibold shadow-md transition"
         >
-          Add Restaurant
+          + Add Restaurant
         </button>
-
       </div>
 
-      {/* Modal for adding new restaurant */}
+      {/* Modal */}
       {showModal && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center px-4">
 
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6">
 
-          <div className="bg-white p-6 rounded-xl w-96">
-
-            <h2 className="text-xl font-bold mb-5">
+            <h2 className="text-xl font-bold mb-6 text-gray-800">
               Add Restaurant
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
 
-              <input
-                type="text"
-                name="RestaurantName"
-                placeholder="Restaurant Name"
-                value={formData.RestaurantName}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                required
-              />
+              {[
+                { name: "RestaurantName", placeholder: "Restaurant Name" },
+                { name: "City", placeholder: "City" },
+                { name: "name", placeholder: "Owner Name" },
+                { name: "Phone", placeholder: "Phone Number" }
+              ].map((field) => (
+                <input
+                  key={field.name}
+                  type="text"
+                  name={field.name}
+                  placeholder={field.placeholder}
+                  value={formData[field.name]}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none"
+                />
+              ))}
 
-              <input
-                type="text"
-                name="City"
-                placeholder="City"
-                value={formData.City}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                required
-              />
-
-              <input
-                type="text"
-                name="name"
-                placeholder="Owner Name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                required
-              />
-
-              <input
-                type="text"
-                name="Phone"
-                placeholder="Phone Number"
-                value={formData.Phone}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                required
-              />
-
-              <div className="flex justify-between mt-5">
-
+              <div className="flex justify-between pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 border rounded font-semibold"
+                  className="px-4 py-2 rounded-xl border hover:bg-gray-100"
                 >
                   Cancel
                 </button>
 
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-red-500 text-white rounded font-bold"
+                  className="px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold"
                 >
                   Save
                 </button>
-
               </div>
 
             </form>
 
           </div>
         </div>
-
       )}
 
     </div>

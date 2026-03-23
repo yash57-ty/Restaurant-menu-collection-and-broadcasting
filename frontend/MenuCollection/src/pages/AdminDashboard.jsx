@@ -2,38 +2,28 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
-
-  // React Router hook used to navigate between pages
   const navigate = useNavigate();
-
-  // Get the admin name stored after login
   const studentName = localStorage.getItem("name");
 
-  // Clears login data and redirects the user to login page
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login", { replace: true });
   };
 
   return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-amber-100">
 
-    // Main page container with background color used across the project
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
-
-      {/* Header displaying admin name and logout button */}
-      <header className="bg-white border-b border-orange-100">
-
+      {/* Header */}
+      <header className="bg-white/70 backdrop-blur-lg border-b border-gray-200 shadow-sm">
         <div className="max-w-6xl mx-auto px-6 h-16 flex justify-between items-center">
 
-          {/* Shows admin panel title and logged in admin name */}
-          <h1 className="text-xl font-bold text-gray-800">
-            Admin Panel – {studentName}
+          <h1 className="text-lg md:text-xl font-semibold text-gray-800">
+            Admin Panel • <span className="text-orange-600">{studentName}</span>
           </h1>
 
-          {/* Logout button clears localStorage and returns to login */}
           <button
             onClick={handleLogout}
-            className="px-4 py-2 bg-red-500 text-white rounded font-bold"
+            className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold shadow transition"
           >
             Logout
           </button>
@@ -41,84 +31,69 @@ function AdminDashboard() {
         </div>
       </header>
 
-      {/* Main dashboard content */}
+      {/* Main */}
       <main className="max-w-6xl mx-auto px-6 py-10">
 
-        {/* Dashboard title and description */}
+        {/* Title */}
         <div className="mb-10">
-
-          <h2 className="text-3xl font-extrabold text-gray-800 mb-2">
-            Admin Dashboard
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+            Dashboard Overview 🚀
           </h2>
-
-          <p className="text-gray-600">
-            Manage menus, view orders, and monitor restaurant analytics.
+          <p className="text-gray-500">
+            Manage menus, track orders, and monitor performance.
           </p>
-
         </div>
 
-        {/* Grid containing the navigation cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          {/* Card to view today's menu */}
-          <section className="bg-white border rounded-xl p-6">
-
-            <h3 className="text-lg font-bold text-gray-800 mb-2">
-              Today's Menu
+          {/* Menu Card */}
+          <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-6 shadow-md hover:shadow-xl transition cursor-pointer">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              🍽️ Today's Menu
             </h3>
-
-            <p className="text-gray-600 mb-4">
-              View all active restaurant menus.
+            <p className="text-gray-500 text-sm mb-4">
+              View and manage active restaurant menus.
             </p>
-
             <button
               onClick={() => navigate("/menus")}
-              className="bg-red-500 text-white px-5 py-2 rounded font-bold"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-xl font-semibold transition"
             >
               View Menu
             </button>
+          </div>
 
-          </section>
-
-          {/* Card to view past orders */}
-          <section className="bg-white border rounded-xl p-6">
-
-            <h3 className="text-lg font-bold text-gray-800 mb-2">
-              Past Orders
+          {/* Orders Card */}
+          <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-6 shadow-md hover:shadow-xl transition cursor-pointer">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              📦 Past Orders
             </h3>
-
-            <p className="text-gray-600 mb-4">
-              Review order history and details.
+            <p className="text-gray-500 text-sm mb-4">
+              Review all previous orders and details.
             </p>
-
             <button
               onClick={() => navigate("/orders")}
-              className="bg-red-500 text-white px-5 py-2 rounded font-bold"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-xl font-semibold transition"
             >
               Show Orders
             </button>
+          </div>
 
-          </section>
-
-          {/* Card to view restaurant analytics */}
-          <section className="bg-white border rounded-xl p-6">
-
-            <h3 className="text-lg font-bold text-gray-800 mb-2">
-              Restaurant Analytics
+          {/* Analytics Card */}
+          <div className="bg-white/70 backdrop-blur-lg rounded-2xl p-6 shadow-md hover:shadow-xl transition cursor-pointer">
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">
+              📊 Analytics
             </h3>
-
-            <p className="text-gray-600 mb-4">
-              View restaurant performance and revenue analytics.
+            <p className="text-gray-500 text-sm mb-4">
+              Monitor restaurant performance and revenue.
             </p>
-
             <button
               onClick={() => navigate("/admin")}
-              className="bg-red-500 text-white px-5 py-2 rounded font-bold"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-xl font-semibold transition"
             >
               View Analytics
             </button>
-
-          </section>
+          </div>
 
         </div>
 

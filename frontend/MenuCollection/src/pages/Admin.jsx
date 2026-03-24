@@ -35,7 +35,7 @@ function Admin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await fetch("http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/api/admin/addRestaurant", {
+    await fetch("/api/admin/addRestaurant", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

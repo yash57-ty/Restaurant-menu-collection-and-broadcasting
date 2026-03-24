@@ -12,7 +12,7 @@ function Orders() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch("http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/api/api/orders", {
+      const res = await fetch("/api/api/orders", {
         headers: {
           "X-USER-PHONE": localStorage.getItem("userPhone"),
         },
@@ -66,7 +66,7 @@ function Orders() {
 
     try {
       const res = await fetch(
-        `http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/api/api/orders/${selectedOrder.orderId}/cancel`,
+        `/api/api/orders/${selectedOrder.orderId}/cancel`,
         {
           method: "PUT",
           headers: {

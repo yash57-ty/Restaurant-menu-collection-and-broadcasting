@@ -10,11 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = {
-        "http://localhost:5173",
-        "https://nakita-unfrequentative-buckishly.ngrok",
-        "http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com"
-})
+@CrossOrigin(origins = "*")
 @RequestMapping("/webhook")
 public class RestaurantController {
     private static final String VERIFY_TOKEN = "my_verify_token";

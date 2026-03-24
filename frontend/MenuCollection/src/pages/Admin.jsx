@@ -23,7 +23,7 @@ function Admin() {
   const fetchRestaurant = async () => {
     try {
       const res = await fetch(
-        `http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/api/admin/getRestaurant?page=${page}&size=${pageSize}&month=${month}`
+        `/api/admin/getRestaurant?page=${page}&size=${pageSize}&month=${month}`
       );
       const data = await res.json();
       setRestaurants(data);

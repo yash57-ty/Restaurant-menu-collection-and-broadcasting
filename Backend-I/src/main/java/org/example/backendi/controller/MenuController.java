@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@CrossOrigin(origins="http://localhost:5173, https://nakita-unfrequentative-buckishly.ngrok")
+@CrossOrigin(origins = "*")
 @RestController
 public class MenuController {
     @Autowired

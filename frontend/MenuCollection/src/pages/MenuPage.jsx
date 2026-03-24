@@ -14,7 +14,7 @@ export default function MenuPage() {
   const [filteredCities, setFilteredCities] = useState([]);
   const [showCityList, setShowCityList] = useState(false);
 
-  const BASE_URL = "http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com";
+  const BASE_URL = "http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/api";
 
   useEffect(() => {
     const fetchCities = async () => {

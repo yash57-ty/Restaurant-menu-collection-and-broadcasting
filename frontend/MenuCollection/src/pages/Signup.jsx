@@ -17,7 +17,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const res = await fetch("http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/auth/signup", {
+    const res = await fetch("http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/api/auth/signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

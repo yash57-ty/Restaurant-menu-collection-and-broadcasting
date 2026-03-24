@@ -20,7 +20,7 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/auth/login", {
+      const res = await fetch("http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

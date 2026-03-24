@@ -1,8 +1,10 @@
 export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
   const isLimitReached = restaurant.orderCount >= restaurant.limit;
+  
   const progress = restaurant.limit
     ? (restaurant.orderCount / restaurant.limit) * 100
     : 0;
+
   return (
     <div
       onClick={!disabled && !isLimitReached ? onSelect : undefined}
@@ -14,7 +16,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
         hover:shadow-xl hover:scale-[1.02]
         ${isLimitReached || disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}
       `}
-    >
+      >
 
       {/* Restaurant name */}
       <h3 className="text-lg font-bold text-red-500 mb-2">
@@ -28,11 +30,9 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
 
       {/* Shows how many orders are already placed */}
       <div className="flex justify-between text-sm mb-3">
-
         <span>
           <b>Orders:</b> {restaurant.orderCount} / {restaurant.limit}
         </span>
-
       </div>
 
       {/* Orders Progress */}
@@ -81,13 +81,13 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
           }
         `}
       >
+
         {isLimitReached
           ? "Orders Closed"
           : isSelected
           ? "Selected ✓"
           : "Order Now"}
       </button>
-
     </div>
   );
 }

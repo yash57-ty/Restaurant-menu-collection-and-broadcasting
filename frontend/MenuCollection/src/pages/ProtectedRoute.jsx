@@ -13,9 +13,9 @@ function ProtectedRoute({ children, allowedRole }) {
     const timer = setTimeout(() => {
       setChecking(false);
     }, 300);
-
     return () => clearTimeout(timer);
   }, []);
+
 
   // Show loading UI instead of blank screen
   if (checking) {

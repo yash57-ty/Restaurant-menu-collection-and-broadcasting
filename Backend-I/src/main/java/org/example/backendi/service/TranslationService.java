@@ -18,8 +18,7 @@ public class TranslationService {
 
         try {
 
-            // Encode ONLY the text parameter
-            String encodedText =
+             String encodedText =
                     URLEncoder.encode(text, StandardCharsets.UTF_8);
 
             String url =

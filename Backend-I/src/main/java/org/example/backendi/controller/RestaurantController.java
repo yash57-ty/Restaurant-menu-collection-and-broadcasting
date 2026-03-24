@@ -7,11 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins="http://localhost:5173, https://nakita-unfrequentative-buckishly.ngrok")
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "https://nakita-unfrequentative-buckishly.ngrok",
+        "http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com"
+})
 @RequestMapping("/webhook")
 public class RestaurantController {
     private static final String VERIFY_TOKEN = "my_verify_token";
@@ -37,6 +40,7 @@ public class RestaurantController {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(payload);
+
 
             JsonNode entryArray = rootNode.path("entry");
             if (!entryArray.isArray() || entryArray.isEmpty()) {

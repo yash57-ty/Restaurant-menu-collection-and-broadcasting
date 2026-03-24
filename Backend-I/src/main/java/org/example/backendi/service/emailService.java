@@ -7,12 +7,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 class emailService {
-
     @Autowired
     private JavaMailSender mailSender;
-
     public void sendCancelMail(String to, Long orderId) {
-
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Order Cancelled");

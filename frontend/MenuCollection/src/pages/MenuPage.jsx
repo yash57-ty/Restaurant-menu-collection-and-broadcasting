@@ -231,7 +231,7 @@ export default function MenuPage() {
         )}
 
         {/* 🔥 Menu Layout (will become compact after next step) */}
-        <div className="flex flex-col gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {menu.map((res) => (
             <RestaurantCard
               key={res.menuId}

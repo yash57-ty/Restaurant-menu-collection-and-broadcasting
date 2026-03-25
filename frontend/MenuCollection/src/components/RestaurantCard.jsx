@@ -26,7 +26,9 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     }
   };
 
-  //  COMPACT MOBILE VIEW
+  // ======================
+  // 🔥 MOBILE COMPACT VIEW (UNCHANGED)
+  // ======================
   if (isMobile && !isExpanded) {
     return (
       <div
@@ -40,6 +42,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
           ${isLimitReached ? "opacity-60" : "cursor-pointer"}
         `}
       >
+
         {/* LEFT */}
         <div className="flex-1 min-w-0">
 
@@ -69,77 +72,110 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
           </span>
 
         </div>
+
       </div>
     );
   }
 
-  // DESKTOP
-  return (
-    <div
-      onClick={handleClick}
-      className={`
-        w-full
-        bg-white/70 backdrop-blur-lg border border-white/40
-        rounded-2xl p-5 shadow-md
-        transition-all duration-200
-        hover:shadow-xl
-        active:scale-[0.98]
-        ${isLimitReached ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}
-      `}
-    >
+  // ======================
+  // 🔥 MOBILE EXPANDED VIEW
+  // ======================
+  if (isMobile && isExpanded) {
+    return (
+      <div
+        className="w-full bg-white rounded-2xl p-5 shadow-md border"
+        onClick={handleClick}
+      >
 
-      {/* HEADER */}
-      <div className="flex justify-between items-start mb-3">
-
-        <h3 className="text-lg font-semibold text-gray-900">
+        <h3 className="text-lg font-semibold mb-2">
           🍽️ {restaurant.RestaurantName}
         </h3>
 
-        <span
-          className={`text-xs px-2 py-1 rounded-full font-medium ${
-            isLimitReached
-              ? "bg-red-100 text-red-600"
-              : "bg-green-100 text-green-600"
-          }`}
-        >
-          {isLimitReached ? "Closed" : "Open"}
-        </span>
+        {/* FULL DESCRIPTION */}
+        <p className="text-sm text-gray-700 mb-4 whitespace-pre-wrap">
+          {restaurant.message}
+        </p>
 
-      </div>
+        <div className="flex justify-between mb-3">
+          <span className="text-orange-600 font-semibold">
+            ₹ {restaurant.price}
+          </span>
 
-      {/*  FULL DESCRIPTION (FIXED) */}
-      <p className="text-sm text-gray-700 mb-4 whitespace-pre-wrap leading-relaxed">
-        {restaurant.message}
-      </p>
-
-      {/* ORDERS */}
-      <div className="mb-4">
-        <div className="flex justify-between text-xs text-gray-500 mb-1">
-          <span>
-            Orders: {restaurant.orderCount}/{restaurant.limit}
+          <span className="text-xs text-gray-500">
+            {restaurant.orderCount}/{restaurant.limit}
           </span>
         </div>
 
-        <div className="w-full bg-gray-200 h-2 rounded-full">
-          <div
-            className="bg-gradient-to-r from-orange-400 to-orange-600 h-2 rounded-full"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onSelect();
+          }}
+          className="w-full bg-orange-500 text-white py-2 rounded-xl"
+        >
+          Order Now
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsExpanded(false);
+          }}
+          className="w-full mt-2 text-sm text-gray-500"
+        >
+          Close
+        </button>
+
+      </div>
+    );
+  }
+
+  // ======================
+  // 🔥 DESKTOP (ORIGINAL UI RESTORED)
+  // ======================
+  return (
+    <div
+      onClick={!disabled && !isLimitReached ? onSelect : undefined}
+      className={`
+        w-full flex flex-col
+        bg-white border p-5
+        ${
+          isLimitReached || disabled
+            ? "opacity-60 cursor-not-allowed"
+            : "cursor-pointer"
+        }
+      `}
+    >
+
+      {/* Restaurant name */}
+      <h3 className="text-lg font-bold text-gray-800 mb-2">
+        {restaurant.RestaurantName}
+      </h3>
+
+      {/* ORIGINAL DESCRIPTION */}
+      <pre className="whitespace-pre-wrap text-base font-medium text-gray-800 border p-3 mb-3 bg-gray-50">
+        {restaurant.message}
+      </pre>
+
+      {/* Orders */}
+      <div className="flex justify-between text-sm mb-3">
+        <span>
+          <b>Orders:</b> {restaurant.orderCount} / {restaurant.limit}
+        </span>
       </div>
 
-      {/* PRICE */}
+      {/* Price + Time */}
       <div className="flex justify-between items-center mb-4">
-        <span className="text-lg font-semibold text-orange-600">
+        <span className="font-bold text-red-500">
           ₹ {restaurant.price}
         </span>
 
-        <span className="text-xs text-gray-400">
-          {new Date(restaurant.createdDate).toLocaleTimeString()}
+        <span className="text-xs text-gray-600">
+          {new Date(restaurant.createdDate).toLocaleString()}
         </span>
       </div>
 
-      {/* BUTTON */}
+      {/* Button */}
       <button
         type="button"
         disabled={isLimitReached || disabled}
@@ -148,35 +184,16 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
           if (!isLimitReached && !disabled) onSelect();
         }}
         className={`
-          w-full py-2.5 rounded-xl font-semibold transition
+          w-full py-2 font-bold
           ${
             isLimitReached
               ? "bg-gray-300 text-gray-600"
-              : isSelected
-              ? "bg-green-500 text-white"
-              : "bg-orange-500 hover:bg-orange-600 text-white"
+              : "bg-red-500 text-white"
           }
         `}
       >
-        {isLimitReached
-          ? "Orders Closed"
-          : isSelected
-          ? "Selected ✓"
-          : "Order Now"}
+        {isLimitReached ? "Orders Closed" : "Select Restaurant"}
       </button>
-
-      {/* COLLAPSE BUTTON (MOBILE) */}
-      {isMobile && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsExpanded(false);
-          }}
-          className="mt-3 text-sm text-gray-500"
-        >
-          Close
-        </button>
-      )}
 
     </div>
   );

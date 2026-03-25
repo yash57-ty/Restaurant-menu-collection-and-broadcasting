@@ -26,9 +26,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     }
   };
 
-  // ======================
-  // 🔥 MOBILE COMPACT VIEW (UNCHANGED)
-  // ======================
+  //  MOBILE COMPACT VIEW 
   if (isMobile && !isExpanded) {
     return (
       <div
@@ -77,9 +75,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     );
   }
 
-  // ======================
-  // 🔥 MOBILE EXPANDED VIEW
-  // ======================
+  //  MOBILE EXPANDED VIEW
   if (isMobile && isExpanded) {
     return (
       <div
@@ -130,9 +126,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     );
   }
 
-  // ======================
-  // 🔥 DESKTOP (ORIGINAL UI RESTORED)
-  // ======================
+  //  DESKTOP
   return (
     <div
       onClick={!disabled && !isLimitReached ? onSelect : undefined}
@@ -153,9 +147,9 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
       </h3>
 
       {/* ORIGINAL DESCRIPTION */}
-      <pre className="whitespace-pre-wrap text-base font-medium text-gray-800 border p-3 mb-3 bg-gray-50">
+      <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700 border p-3 mb-3 bg-gray-50 rounded-lg">
         {restaurant.message}
-      </pre>
+      </p>
 
       {/* Orders */}
       <div className="flex justify-between text-sm mb-3">

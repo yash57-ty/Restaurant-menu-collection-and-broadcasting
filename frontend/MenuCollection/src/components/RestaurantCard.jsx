@@ -20,36 +20,32 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
 
   const handleClick = () => {
     if (isMobile) {
-      setIsExpanded((prev) => !prev);
+      setIsExpanded(prev => !prev);
     } else {
       if (!isLimitReached && !disabled) onSelect();
     }
   };
 
-  //  MOBILE COMPACT VIEW
+  //  COMPACT MOBILE VIEW
   if (isMobile && !isExpanded) {
     return (
       <div
         onClick={handleClick}
         className={`
+          w-full
           flex items-center justify-between
-          bg-white/80 backdrop-blur rounded-xl px-4 py-3
+          bg-white rounded-xl px-4 py-3
           shadow-sm border border-gray-100
           active:scale-[0.98] transition
           ${isLimitReached ? "opacity-60" : "cursor-pointer"}
         `}
       >
+        {/* LEFT */}
+        <div className="flex-1 min-w-0">
 
-        {/* Left */}
-        <div className="flex-1">
-
-          <h3 className="text-sm font-semibold text-gray-900">
+          <h3 className="text-sm font-semibold text-gray-900 truncate">
             🍽️ {restaurant.RestaurantName}
           </h3>
-
-          <p className="text-xs text-gray-500 truncate">
-            {restaurant.message}
-          </p>
 
           <p className="text-xs text-gray-400 mt-1">
             {restaurant.orderCount}/{restaurant.limit} orders
@@ -57,8 +53,8 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
 
         </div>
 
-        {/* Right */}
-        <div className="text-right ml-3">
+        {/* RIGHT */}
+        <div className="text-right ml-3 flex-shrink-0">
 
           <p className="text-sm font-semibold text-orange-600">
             ₹{restaurant.price}
@@ -73,28 +69,27 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
           </span>
 
         </div>
-
       </div>
     );
   }
 
-  // 🔥 EXPANDED (MOBILE) OR DESKTOP VIEW
+  // DESKTOP
   return (
     <div
       onClick={handleClick}
       className={`
-        group w-full flex flex-col justify-between
+        w-full
         bg-white/70 backdrop-blur-lg border border-white/40
         rounded-2xl p-5 shadow-md
         transition-all duration-200
-        hover:shadow-xl hover:scale-[1.02]
+        hover:shadow-xl
         active:scale-[0.98]
-        ${isLimitReached || disabled ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}
+        ${isLimitReached ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}
       `}
     >
 
-      {/* Header */}
-      <div className="flex justify-between items-start mb-2">
+      {/* HEADER */}
+      <div className="flex justify-between items-start mb-3">
 
         <h3 className="text-lg font-semibold text-gray-900">
           🍽️ {restaurant.RestaurantName}
@@ -112,12 +107,12 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
 
       </div>
 
-      {/* Description */}
-      <p className="text-sm text-gray-600 mb-3 line-clamp-4">
+      {/*  FULL DESCRIPTION (FIXED) */}
+      <p className="text-sm text-gray-700 mb-4 whitespace-pre-wrap leading-relaxed">
         {restaurant.message}
       </p>
 
-      {/* Orders */}
+      {/* ORDERS */}
       <div className="mb-4">
         <div className="flex justify-between text-xs text-gray-500 mb-1">
           <span>
@@ -133,9 +128,8 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
         </div>
       </div>
 
-      {/* Price + Time */}
+      {/* PRICE */}
       <div className="flex justify-between items-center mb-4">
-
         <span className="text-lg font-semibold text-orange-600">
           ₹ {restaurant.price}
         </span>
@@ -143,10 +137,9 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
         <span className="text-xs text-gray-400">
           {new Date(restaurant.createdDate).toLocaleTimeString()}
         </span>
-
       </div>
 
-      {/* CTA */}
+      {/* BUTTON */}
       <button
         type="button"
         disabled={isLimitReached || disabled}
@@ -172,8 +165,8 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
           : "Order Now"}
       </button>
 
-      {/* Collapse button (only mobile expanded) */}
-      {isMobile && isExpanded && (
+      {/* COLLAPSE BUTTON (MOBILE) */}
+      {isMobile && (
         <button
           onClick={(e) => {
             e.stopPropagation();

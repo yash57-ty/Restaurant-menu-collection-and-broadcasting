@@ -3,6 +3,7 @@ import RestaurantCard from "../components/RestaurantCard";
 import ResponseModal from "../components/ResponseModal";
 
 export default function MenuPage() {
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [menu, setMenu] = useState([]);
@@ -16,6 +17,7 @@ export default function MenuPage() {
 
   const BASE_URL = "/api";
 
+  // Fetch cities
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -139,54 +141,80 @@ export default function MenuPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-amber-100">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 py-8">
 
-        {/* Search Section */}
-        <div className="bg-white/70 backdrop-blur-lg rounded-2xl shadow-md p-4 md:p-6 mb-8 flex flex-col md:flex-row gap-6">
+      <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
 
-          {/* Search Menu */}
-          <div>
-            <label className="font-bold text-gray-700">Search Menu:</label>
-            <input
-              type="text"
-              placeholder="Search food"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-64 px-3 py-2 border rounded mt-2"
-            />
-          </div>
+        {/* 🔥 Sticky Search Bar */}
+        <div className="sticky top-0 z-40 mb-6">
 
-          {/* City */}
-          <div className="relative">
-            <label className="font-bold text-gray-700">City:</label>
-            <input
-              type="text"
-              placeholder="Select city"
-              value={city}
-              onChange={(e) => handleCityChange(e.target.value)}
-              onFocus={() => setShowCityList(true)}
-              className="w-64 px-3 py-2 border rounded mt-2"
-            />
+          <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-md p-4 flex flex-col md:flex-row gap-4">
 
-            {showCityList && filteredCities.length > 0 && (
-              <div className="absolute z-10 w-full bg-white rounded-xl shadow-lg mt-2 max-h-48 overflow-y-auto">
-                {filteredCities.slice(0, 5).map((c) => (
-                  <div
-                    key={c}
-                    onClick={() => {
-                      setCity(c);
-                      setShowCityList(false);
-                    }}
-                    className="px-4 py-2 hover:bg-orange-50 cursor-pointer"
-                  >
-                    {c}
-                  </div>
-                ))}
-              </div>
-            )}
+            {/* Search */}
+            <div className="flex-1 relative">
+
+              <input
+                type="text"
+                placeholder="🔍 Search food or restaurant..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none transition"
+              />
+
+              {/* Clear button */}
+              {search && (
+                <button
+                  onClick={() => setSearch("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  ✕
+                </button>
+              )}
+
+            </div>
+
+            {/* City */}
+            <div className="relative w-full md:w-64">
+
+              <input
+                type="text"
+                placeholder="📍 Select city"
+                value={city}
+                onChange={(e) => handleCityChange(e.target.value)}
+                onFocus={() => setShowCityList(true)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none"
+              />
+
+              {showCityList && filteredCities.length > 0 && (
+                <div className="absolute z-10 w-full bg-white rounded-xl shadow-lg mt-2 max-h-48 overflow-y-auto">
+                  {filteredCities.slice(0, 5).map((c) => (
+                    <div
+                      key={c}
+                      onClick={() => {
+                        setCity(c);
+                        setShowCityList(false);
+                      }}
+                      className="px-4 py-2 hover:bg-orange-50 cursor-pointer"
+                    >
+                      {c}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+            </div>
+
           </div>
 
         </div>
+
+        {/* 🔥 Search Result Indicator */}
+        {(search || city) && (
+          <p className="text-sm text-gray-600 mb-4">
+            Showing results
+            {search && <> for "<span className="font-semibold">{search}</span>"</>}
+            {city && <> in <span className="font-semibold">{city}</span></>}
+          </p>
+        )}
 
         {/* Success Message */}
         {orderSuccess && (
@@ -202,8 +230,8 @@ export default function MenuPage() {
           </div>
         )}
 
-        {/* Menu Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* 🔥 Menu Layout (will become compact after next step) */}
+        <div className="flex flex-col gap-4">
           {menu.map((res) => (
             <RestaurantCard
               key={res.menuId}

@@ -131,7 +131,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     <div
       onClick={!disabled && !isLimitReached ? onSelect : undefined}
       className={`
-        w-full flex flex-col
+        w-full flex flex-col justify-between h-full
         bg-white border p-5
         ${
           isLimitReached || disabled
@@ -140,6 +140,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
         }
       `}
     >
+      <div>
 
       {/* Restaurant name */}
       <h3 className="text-lg font-bold text-gray-800 mb-2">
@@ -167,6 +168,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
         <span className="text-xs text-gray-600">
           {new Date(restaurant.createdDate).toLocaleString()}
         </span>
+      </div>
       </div>
 
       {/* Button */}

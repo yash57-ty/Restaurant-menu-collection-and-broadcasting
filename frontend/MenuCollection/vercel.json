@@ -3,6 +3,10 @@
     {
       "source": "/api/(.*)",
       "destination": "http://menucollection-env.eba-3fhzuumj.eu-north-1.elasticbeanstalk.com/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

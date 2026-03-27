@@ -1,5 +1,7 @@
 package org.example.backendi.controller;
 
+
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.backendi.service.RestaurantService;
@@ -9,15 +11,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/webhook")
 public class RestaurantController {
     private static final String VERIFY_TOKEN = "my_verify_token";
-
     @Autowired
     RestaurantService restaurantService;
-
     @GetMapping
     public ResponseEntity<String> verifyWebhook(
             @RequestParam("hub.mode") String mode,
@@ -37,7 +39,6 @@ public class RestaurantController {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode rootNode = mapper.readTree(payload);
 
-
             JsonNode entryArray = rootNode.path("entry");
             if (!entryArray.isArray() || entryArray.isEmpty()) {
                 return ResponseEntity.ok("NO_ENTRY");
@@ -56,24 +57,24 @@ public class RestaurantController {
             if (!messagesArray.isArray()) {
                 return ResponseEntity.ok("NO_MESSAGES");
             }
-
             for (JsonNode messageNode : messagesArray) {
-
                 if (!"text".equals(messageNode.path("type").asText())) {
                     continue;
                 }
                 System.out.println(messageNode);
                 restaurantService.getRestaurantdetails(messageNode);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseEntity.ok("EVENT_RECEIVED");
     }
 
+
+
     @GetMapping("api/cities")
-    List<String> fetchcity(){
+    List<String> fetchcity() {
         return restaurantService.fetchcity();
     }
+
 }

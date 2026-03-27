@@ -64,7 +64,6 @@ public class RestaurantService {
                 return;
             }
 
-
             if (text.equalsIgnoreCase("CANCEL")) {
                 MenuStore m = menuStoreRepository.findActiveMenusbyphone(phone);
 
@@ -89,9 +88,14 @@ public class RestaurantService {
                         order.setStatus("CANCELLED");
                         orderRepo.save(order);
 
-                        String email=order.getUser().getEmail();
+                        String email = order.getUser().getEmail();
 
-                        emailservice.sendCancelMail(email,order.getId());
+                        try{
+                            emailservice.sendCancelMail(email, order.getId());
+                            Thread.sleep(2000);
+                        } catch (Exception e) {
+                            System.out.println("Failed to send email to: " + email);
+                        }
                     }
                 }
 

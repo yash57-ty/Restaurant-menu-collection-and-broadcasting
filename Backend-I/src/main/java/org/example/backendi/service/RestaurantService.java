@@ -15,6 +15,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 @Service
 public class RestaurantService {
 
@@ -114,16 +115,11 @@ public class RestaurantService {
 
                 return;
             }
-
-
             if (menu_session != null && menu_session.getExpiresAt().isBefore(Instant.now())) {
                 menusessionRepo.delete(menu_session);
                 wap.sendText(phone, "⏳ Session expired. Please start again and send 'RESET'");
                 return;
             }
-
-
-
             if (menu_session == null) {
 
                 menu_session = new Menu_session();

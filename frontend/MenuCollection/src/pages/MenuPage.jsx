@@ -25,13 +25,12 @@ export default function MenuPage() {
         setCities(data);
         setFilteredCities(data);
       } catch (err) {
-        console.error("Failed to load cities", err);
+        console.error(err);
       }
     };
     fetchCities();
   }, []);
 
-  // Fetch menu data with optional filters
   const fetchMenu = async (keyword = "", cityName = "") => {
     try {
       const res = await fetch(
@@ -40,11 +39,10 @@ export default function MenuPage() {
       const data = await res.json();
       setMenu(data);
     } catch (err) {
-      console.error("Menu fetch failed", err);
+      console.error(err);
     }
   };
 
-  // Debounced search execution
   useEffect(() => {
     const delay = setTimeout(() => {
       fetchMenu(search, city);
@@ -52,15 +50,13 @@ export default function MenuPage() {
     return () => clearTimeout(delay);
   }, [search, city]);
 
-  // Periodic refresh for near real-time updates
   useEffect(() => {
     const interval = setInterval(() => {
       fetchMenu(search, city);
-    }, 4000);
+    }, 5000);
     return () => clearInterval(interval);
   }, [search, city]);
 
-  // Filters city suggestions dynamically
   const handleCityChange = (value) => {
     setCity(value);
     const filtered = cities.filter((c) =>
@@ -70,44 +66,16 @@ export default function MenuPage() {
     setShowCityList(true);
   };
 
-  // Applies optimistic UI update before API confirmation
-  const applyOptimisticUpdate = (menuId, quantity) => {
-    setMenu((prev) =>
-      prev.map((item) =>
-        item.menuId === menuId
-          ? { ...item, orderCount: item.orderCount + quantity }
-          : item
-      )
-    );
-  };
-
-  // Rolls back optimistic update on failure
-  const rollbackUpdate = (menuId, quantity) => {
-    setMenu((prev) =>
-      prev.map((item) =>
-        item.menuId === menuId
-          ? { ...item, orderCount: item.orderCount - quantity }
-          : item
-      )
-    );
-  };
-
-  // Handles restaurant selection with validation
   const handleSelect = (restaurant) => {
-    if (restaurant.orderCount >= restaurant.limit) {
-      alert("Order limit reached for this restaurant");
-      return;
-    }
+    if (restaurant.orderCount >= restaurant.limit) return;
     setSelectedRestaurant(restaurant);
     setIsModalOpen(true);
   };
 
-  // Submits order response with optimistic update strategy
   const handleSubmitResponse = async (payload) => {
     if (submitting) return;
 
     setSubmitting(true);
-    applyOptimisticUpdate(selectedRestaurant.menuId, payload.quantity);
 
     try {
       const res = await fetch(`${BASE_URL}/api/response`, {
@@ -119,103 +87,82 @@ export default function MenuPage() {
         body: JSON.stringify(payload),
       });
 
-      if (!res.ok) {
-        const message = await res.text();
-        throw new Error(message || "Order rejected");
-      }
+      if (!res.ok) throw new Error("Order failed");
 
       const data = await res.json();
       setOrderSuccess(data);
 
-      await fetchMenu(search, city);
+      fetchMenu(search, city);
 
       setIsModalOpen(false);
       setSelectedRestaurant(null);
     } catch (err) {
-      rollbackUpdate(selectedRestaurant.menuId, payload.quantity);
-      alert(err.message || "Order failed");
+      alert(err.message);
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Toggles mobile card expansion
   const handleToggle = (menuId) => {
     setExpandedId((prev) => (prev === menuId ? null : menuId));
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] text-[#1A1D23]">
-      <div className="max-w-6xl mx-auto px-6 py-10">
+    <div className="min-h-screen bg-[#F7F7F7]">
+      <div className="max-w-4xl mx-auto px-4 py-6">
 
-        {/* Search and filter controls */}
-        <div className="sticky top-6 z-40 mb-12">
-          <div className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-[0_20px_40px_rgba(0,0,0,0.06)] p-3 flex flex-col md:flex-row gap-2 border border-white">
+        {/* ===== HEADER ===== */}
+        <h1 className="text-xl font-bold mb-4">Browse Menus</h1>
+
+        {/* ===== SEARCH BAR ===== */}
+        <div className="sticky top-3 z-40 mb-6">
+          <div className="bg-white rounded-xl shadow-sm p-2 flex gap-2">
             
             <input
               type="text"
-              placeholder="🔍 Search restaurants..."
+              placeholder="Search restaurants..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="flex-1 bg-transparent px-6 py-3 border-none focus:ring-0 font-bold placeholder:text-gray-300"
+              className="flex-1 px-4 py-2 outline-none"
             />
 
-            <div className="h-8 w-px bg-gray-100 hidden md:block self-center mx-2"></div>
-
-            <div className="relative md:w-64">
-              <input
-                type="text"
-                placeholder="📍 Select city"
-                value={city}
-                onChange={(e) => handleCityChange(e.target.value)}
-                onFocus={() => setShowCityList(true)}
-                className="w-full bg-transparent px-6 py-3 border-none focus:ring-0 font-black text-[#FF4757]"
-              />
-
-              {showCityList && filteredCities.length > 0 && (
-                <div className="absolute top-full left-0 w-full mt-4 bg-white rounded-3xl shadow-2xl border border-gray-50 overflow-hidden">
-                  {filteredCities.slice(0, 5).map((c) => (
-                    <div
-                      key={c}
-                      onClick={() => {
-                        setCity(c);
-                        setShowCityList(false);
-                      }}
-                      className="px-6 py-4 hover:bg-red-50 cursor-pointer font-bold transition-colors"
-                    >
-                      {c}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
+            <input
+              type="text"
+              placeholder="City"
+              value={city}
+              onChange={(e) => handleCityChange(e.target.value)}
+              onFocus={() => setShowCityList(true)}
+              className="w-32 px-3 py-2 outline-none text-red-500"
+            />
           </div>
+
+          {showCityList && filteredCities.length > 0 && (
+            <div className="bg-white mt-2 rounded-xl shadow-md">
+              {filteredCities.slice(0, 5).map((c) => (
+                <div
+                  key={c}
+                  onClick={() => {
+                    setCity(c);
+                    setShowCityList(false);
+                  }}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                >
+                  {c}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Success feedback after order */}
+        {/* SUCCESS */}
         {orderSuccess && (
-          <div className="mb-10 bg-green-50 rounded-[2rem] p-8 border border-green-100 flex justify-between items-center animate-pulse">
-            <div>
-              <h3 className="text-xl font-black text-green-700">
-                Order Placed! 🚀
-              </h3>
-              <p className="text-green-600 font-medium">
-                {orderSuccess.restaurantName} • Qty: {orderSuccess.quantity}
-              </p>
-            </div>
-
-            <button
-              onClick={() => setOrderSuccess(null)}
-              className="text-green-400 font-black"
-            >
-              CLOSE
-            </button>
+          <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-xl">
+            Order placed: {orderSuccess.restaurantName}
           </div>
         )}
 
-        {/* Restaurant listing */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* ===== LIST (LIKE SWIGGY) ===== */}
+        <div className="space-y-4">
           {menu.map((res) => (
             <RestaurantCard
               key={res.menuId}
@@ -228,7 +175,6 @@ export default function MenuPage() {
           ))}
         </div>
 
-        {/* Order modal */}
         <ResponseModal
           isOpen={isModalOpen}
           menuId={selectedRestaurant?.menuId}
@@ -243,7 +189,6 @@ export default function MenuPage() {
           onClose={() => setIsModalOpen(false)}
           onSubmit={handleSubmitResponse}
         />
-
       </div>
     </div>
   );

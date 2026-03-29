@@ -14,6 +14,7 @@ function ResponseModal({
   const [quantity, setQuantity] = useState(1);
   const [errors, setErrors] = useState({});
 
+  // Reset modal state when opened
   useEffect(() => {
     if (isOpen) {
       setQuantity(1);
@@ -26,6 +27,7 @@ function ResponseModal({
 
   const totalAmount = price * quantity;
 
+  // Validates user input before submission
   const validate = () => {
     const newErrors = {};
 
@@ -47,6 +49,7 @@ function ResponseModal({
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handles final submission
   const handleSubmit = () => {
     if (!validate()) return;
 
@@ -60,94 +63,97 @@ function ResponseModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center px-4 z-50">
-
-      {/* Modal */}
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
-
+    <div className="fixed inset-0 bg-[#1A1D23]/60 backdrop-blur-md flex items-center justify-center px-4 z-[100]">
+      
+      <div className="bg-white rounded-[2.5rem] shadow-2xl w-full max-w-md p-8 border border-gray-100 animate-in fade-in zoom-in duration-300">
+        
         {/* Header */}
-        <div className="mb-5">
-          <h3 className="text-lg font-semibold text-gray-900">
-            Confirm Order 🍽️
+        <div className="mb-8">
+          <h3 className="text-2xl font-black tracking-tight text-[#1A1D23]">
+            Finalize Order 🥡
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-[#FF4757] font-bold text-sm uppercase tracking-widest mt-1">
             {restaurantName}
           </p>
         </div>
 
-        {/* Quantity */}
-        <div className="mb-4">
-          <label className="text-sm font-medium text-gray-700">
-            Quantity
-          </label>
-          <input
-            type="number"
-            min="1"
-            max={remainingSlots}
-            value={quantity}
-            onChange={(e) => {
-              let value = e.target.value.replace(/^0+/, "");
-              if (value === "") return setQuantity("");
-              const num = Number(value);
-              if (!isNaN(num)) setQuantity(num);
-            }}
-            className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none"
-          />
-          {errors.quantity && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.quantity}
+        {/* Form */}
+        <div className="space-y-6">
+
+          {/* Quantity */}
+          <div>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">
+              Quantity
+            </label>
+
+            <input
+              type="number"
+              min="1"
+              max={remainingSlots}
+              value={quantity}
+              onChange={(e) => {
+                let value = e.target.value.replace(/^0+/, "");
+                if (value === "") return setQuantity("");
+                const num = Number(value);
+                if (!isNaN(num)) setQuantity(num);
+              }}
+              className="mt-1 w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#FF4757]/20 outline-none font-bold text-lg"
+            />
+
+            {errors.quantity && (
+              <p className="text-[#FF4757] text-xs font-bold mt-2 ml-1">
+                {errors.quantity}
+              </p>
+            )}
+
+            <p className="text-xs text-gray-400 mt-1 ml-1">
+              Available: {remainingSlots}
             </p>
-          )}
-
-          <p className="text-xs text-gray-500 mt-1">
-            Available: {remainingSlots}
-          </p>
-        </div>
-
-        {/* Address */}
-        <div className="mb-4">
-          <label className="text-sm font-medium text-gray-700">
-            Delivery Address
-          </label>
-          <textarea
-            placeholder="Enter full address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 outline-none"
-          />
-          {errors.address && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.address}
-            </p>
-          )}
-        </div>
-
-        {/* Order Summary */}
-        <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 mb-5">
-
-          <div className="flex justify-between text-sm mb-1">
-            <span>Price</span>
-            <span>₹ {price}</span>
           </div>
 
-          <div className="flex justify-between text-sm mb-1">
-            <span>Quantity</span>
-            <span>x {quantity}</span>
+          {/* Address */}
+          <div>
+            <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">
+              Delivery Address
+            </label>
+
+            <textarea
+              placeholder="House no, Street, Landmark..."
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="mt-1 w-full px-5 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#FF4757]/20 outline-none min-h-[100px] resize-none font-medium"
+            />
+
+            {errors.address && (
+              <p className="text-[#FF4757] text-xs font-bold mt-2 ml-1">
+                {errors.address}
+              </p>
+            )}
           </div>
 
-          <div className="flex justify-between font-semibold text-orange-600 mt-2">
-            <span>Total</span>
-            <span>₹ {totalAmount}</span>
+          {/* Order summary */}
+          <div className="bg-[#1A1D23] rounded-3xl p-6 text-white">
+            <div className="flex justify-between text-xs font-bold uppercase tracking-widest text-gray-400 mb-3">
+              <span>Summary</span>
+              <span>x{quantity || 0}</span>
+            </div>
+
+            <div className="flex justify-between items-center">
+              <span className="text-sm font-medium">Total Amount</span>
+              <span className="text-2xl font-black text-[#FF4757]">
+                ₹{totalAmount}
+              </span>
+            </div>
           </div>
 
         </div>
 
         {/* Actions */}
-        <div className="flex justify-end gap-3">
+        <div className="flex gap-3 mt-8">
 
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl border hover:bg-gray-100"
+            className="flex-1 py-4 rounded-2xl font-black text-xs uppercase tracking-widest text-gray-400 hover:bg-gray-50 transition"
           >
             Cancel
           </button>
@@ -155,7 +161,7 @@ function ResponseModal({
           <button
             disabled={submitting}
             onClick={handleSubmit}
-            className="px-5 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-semibold"
+            className="flex-1 bg-[#FF4757] text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-red-100 active:scale-95 transition-all"
           >
             {submitting ? "Placing..." : "Place Order"}
           </button>

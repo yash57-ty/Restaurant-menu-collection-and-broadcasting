@@ -87,53 +87,37 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-100 via-white to-amber-100 px-4">
-
-      {/* Card */}
-      <div className="w-full max-w-md backdrop-blur-xl bg-white/70 border border-white/40 shadow-2xl rounded-2xl p-8">
-
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            Welcome Back 👋
-          </h2>
-          <p className="text-gray-500 mt-2 text-sm">
-            Login to your account
-          </p>
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9] px-4 font-sans text-[#1A1D23]">
+      <div className="w-full max-w-md bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.04)] p-10 border border-gray-100">
+        
+        <div className="text-center mb-10">
+          <h2 className="text-4xl font-black tracking-tight mb-2">Welcome</h2>
+          <p className="text-gray-400 font-medium">Log in to your account</p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-
-          {/* Phone */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
             <input
               type="text"
               name="phone"
-              placeholder="Enter your phone"
+              placeholder="Phone Number"
               value={form.phone}
               onChange={handleChange}
               required
-              className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition"
+              className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#FF4757]/20 outline-none transition-all placeholder:text-gray-300"
             />
           </div>
 
-          {/* Password */}
           <div>
-            <label className="text-sm font-medium text-gray-700">
-              Password
-            </label>
             <input
               type="password"
               name="password"
-              placeholder="Enter your password"
+              placeholder="Password"
               value={form.password}
               onChange={handleChange}
               required
-              className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition"
+              className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#FF4757]/20 outline-none transition-all placeholder:text-gray-300"
             />
           </div>
 
@@ -141,16 +125,15 @@ function Login() {
             <button
               type="button"
               onClick={() => setShowForgot(true)}
-              className="text-sm text-orange-600 hover:underline"
+              className="text-sm font-bold text-[#FF4757] hover:opacity-70"
             >
               Forgot Password?
             </button>
           </div>
 
-          {/* Button */}
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 active:scale-[0.98] text-white py-3 rounded-xl font-semibold shadow-md transition-all duration-200"
+            className="w-full bg-[#1A1D23] hover:bg-black text-white py-5 rounded-2xl font-bold text-lg shadow-xl active:scale-95 transition-all"
           >
             Login
           </button>
@@ -158,72 +141,63 @@ function Login() {
         </form>
 
         {showForgot && (
-        <div className="mt-6 p-4 border rounded-xl bg-white/80">
-          <h3 className="text-lg font-semibold mb-3">
-            Reset Password
-          </h3>
+          <div className="mt-8 p-6 bg-gray-50 rounded-3xl border border-gray-100">
+            <h3 className="text-lg font-bold mb-4">Reset Password</h3>
 
-          <form onSubmit={handleResetPassword} className="space-y-3">
+            <form onSubmit={handleResetPassword} className="space-y-3">
 
-            <input
-              type="text"
-              placeholder="Enter your phone"
-              value={resetPhone}
-              onChange={(e) => setResetPhone(e.target.value)}
-              required
-              className="w-full px-3 py-2 border rounded-lg"
-            />
+              <input
+                type="text"
+                placeholder="Phone"
+                value={resetPhone}
+                onChange={(e) => setResetPhone(e.target.value)}
+                required
+                className="w-full px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-green-400"
+              />
 
-            <input
-              type="password"
-              placeholder="Enter new password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-              className="w-full px-3 py-2 border rounded-lg"
-            />
+              <input
+                type="password"
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
+                className="w-full px-4 py-3 rounded-xl border-none focus:ring-2 focus:ring-green-400"
+              />
 
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                className="flex-1 bg-green-500 text-white py-2 rounded-lg"
-              >
-                Update
-              </button>
+              <div className="flex gap-2">
+                <button
+                  type="submit"
+                  className="flex-1 bg-green-500 text-white py-3 rounded-xl font-bold"
+                >
+                  Update
+                </button>
 
-              <button
-                type="button"
-                onClick={() => setShowForgot(false)}
-                className="flex-1 bg-gray-300 py-2 rounded-lg"
-              >
-                Cancel
-              </button>
-            </div>
+                <button
+                  type="button"
+                  onClick={() => setShowForgot(false)}
+                  className="flex-1 bg-gray-200 py-3 rounded-xl font-bold text-gray-600"
+                >
+                  Cancel
+                </button>
+              </div>
 
-          </form>
-        </div>
-      )}
+            </form>
+          </div>
+        )}
 
-        {/* Footer */}
-        <div className="text-center text-sm mt-8 text-gray-600 space-y-2">
-
-          <p>
+        <div className="mt-10 pt-6 border-t border-gray-50 text-center space-y-3">
+          
+          <p className="text-sm text-gray-500">
             Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-orange-600 font-semibold hover:underline"
-            >
+            <Link to="/signup" className="text-[#FF4757] font-bold">
               Sign up
             </Link>
           </p>
 
-          <p>
-            Want to register your restaurant?{" "}
-            <Link
-              to="/restaurant-register"
-              className="text-orange-600 font-semibold hover:underline"
-            >
-              Click here
+          <p className="text-xs text-gray-400">
+            Own a restaurant?{" "}
+            <Link to="/restaurant-register" className="text-[#1A1D23] font-bold">
+              Register here
             </Link>
           </p>
 

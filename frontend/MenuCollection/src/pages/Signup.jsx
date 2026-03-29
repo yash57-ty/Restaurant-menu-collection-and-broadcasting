@@ -34,98 +34,53 @@ function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-100 via-white to-amber-100 px-4">
-
-      {/* Card */}
-      <div className="w-full max-w-md backdrop-blur-xl bg-white/70 border border-white/40 shadow-2xl rounded-2xl p-8">
-
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold tracking-tight text-gray-900">
-            Create Account 🚀
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9] px-4 py-10 text-[#1A1D23]">
+      <div className="w-full max-w-md bg-white rounded-[3rem] shadow-[0_25px_60px_rgba(0,0,0,0.05)] p-10">
+        
+        <div className="text-center mb-10">
+          <h2 className="text-4xl font-black mb-2 tracking-tight">
+            Create Account
           </h2>
-          <p className="text-gray-500 mt-2 text-sm">
-            Start ordering your favorite food
+          <p className="text-gray-400 font-medium">
+            Join our foodie community
           </p>
         </div>
 
-        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          {/* Name */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Full Name
-            </label>
+          {["name", "phone", "email", "password"].map((field) => (
             <input
-              name="name"
-              placeholder="Enter your name"
+              key={field}
+              name={field}
+              type={
+                field === "password"
+                  ? "password"
+                  : field === "email"
+                  ? "email"
+                  : "text"
+              }
+              placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+              value={form[field]}
               onChange={handleChange}
               required
-              className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition"
+              className="w-full px-6 py-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-[#FF4757]/20 transition-all outline-none"
             />
-          </div>
+          ))}
 
-          {/* Phone */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Phone Number
-            </label>
-            <input
-              name="phone"
-              placeholder="Enter your phone"
-              onChange={handleChange}
-              required
-              className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition"
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              name="email"
-              type="email"
-              placeholder="Enter your email"
-              onChange={handleChange}
-              required
-              className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition"
-            />
-          </div>
-
-          {/* Password */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              onChange={handleChange}
-              required
-              className="mt-1 w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-orange-400 focus:border-orange-400 outline-none transition"
-            />
-          </div>
-
-          {/* Button */}
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 active:scale-[0.98] text-white py-3 rounded-xl font-semibold shadow-md transition-all duration-200"
+            className="w-full bg-[#FF4757] hover:bg-[#ff3041] text-white py-5 rounded-2xl font-bold text-lg shadow-lg shadow-red-100 active:scale-95 transition-all mt-4"
           >
             Create Account
           </button>
 
         </form>
 
-        {/* Footer */}
-        <p className="text-center text-sm mt-8 text-gray-600">
+        <p className="text-center mt-10 text-gray-500 font-medium">
           Already have an account?{" "}
           <Link
             to="/login"
-            className="text-orange-600 font-semibold hover:underline"
+            className="text-[#1A1D23] font-black underline underline-offset-4"
           >
             Login
           </Link>

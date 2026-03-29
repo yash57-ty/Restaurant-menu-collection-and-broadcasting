@@ -4,11 +4,13 @@ export default function MainLayout({ children }) {
 
   const role = localStorage.getItem("role");
 
+  // Determines correct home route based on user role
   const homePath =
     role === "Admin" ? "/admin-dashboard" : "/dashboard";
 
   const location = useLocation();
 
+  // Resolves dynamic page title based on route
   const getPageTitle = () => {
     switch (location.pathname) {
       case "/orders":
@@ -22,64 +24,54 @@ export default function MainLayout({ children }) {
     }
   };
 
+  // Checks active route for navigation highlighting
   const isActive = (path) => location.pathname === path;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-amber-100 text-gray-900">
+    <div className="min-h-screen bg-[#F9F9F9] text-[#1A1D23] font-sans">
 
-      {/* Header */}
-      <header className="bg-white/70 backdrop-blur-lg border-b border-gray-200 shadow-sm sticky top-0 z-50">
+      {/* Top navigation bar */}
+      <header className="bg-white/80 backdrop-blur-xl border-b border-gray-100 sticky top-0 z-[60]">
+        
+        <div className="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
 
-        <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-
-          {/* Title */}
-          <h1 className="text-lg md:text-xl font-semibold text-gray-800">
-            🍽️ {getPageTitle()}
+          {/* Page title */}
+          <h1 className="text-xl font-black tracking-tighter flex items-center gap-2">
+            <span className="bg-[#FF4757] text-white p-1 rounded-lg">
+              GO
+            </span>
+            <span className="hidden sm:inline">
+              {getPageTitle().toUpperCase()}
+            </span>
           </h1>
 
-          {/* Nav */}
-          <nav className="flex items-center gap-3">
-
-            <Link
-              to={homePath}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
-                isActive(homePath)
-                  ? "bg-orange-500 text-white shadow"
-                  : "text-gray-600 hover:bg-orange-50 hover:text-orange-600"
-              }`}
-            >
-              Home
-            </Link>
-
-            <Link
-              to="/menus"
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
-                isActive("/menus")
-                  ? "bg-orange-500 text-white shadow"
-                  : "text-gray-600 hover:bg-orange-50 hover:text-orange-600"
-              }`}
-            >
-              Menu
-            </Link>
-
-            <Link
-              to="/orders"
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition ${
-                isActive("/orders")
-                  ? "bg-orange-500 text-white shadow"
-                  : "text-gray-600 hover:bg-orange-50 hover:text-orange-600"
-              }`}
-            >
-              Orders
-            </Link>
-
+          {/* Navigation menu */}
+          <nav className="flex items-center bg-gray-100 p-1.5 rounded-2xl">
+            {[
+              { name: "Home", path: homePath },
+              { name: "Menu", path: "/menus" },
+              { name: "Orders", path: "/orders" }
+            ].map((nav) => (
+              <Link
+                key={nav.name}
+                to={nav.path}
+                className={`px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  isActive(nav.path)
+                    ? "bg-white text-[#FF4757] shadow-sm"
+                    : "text-gray-400 hover:text-[#1A1D23]"
+                }`}
+              >
+                {nav.name}
+              </Link>
+            ))}
           </nav>
 
         </div>
+
       </header>
 
-      {/* Content */}
-      <main className="max-w-6xl mx-auto px-4 md:px-6 py-8">
+      {/* Page content */}
+      <main className="max-w-6xl mx-auto px-6 py-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
         {children}
       </main>
 

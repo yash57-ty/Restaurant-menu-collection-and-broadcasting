@@ -4,65 +4,60 @@ function RestaurantRegisterInfo() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-100 via-white to-amber-100 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9] px-4">
 
-      {/* Card */}
-      <div className="w-full max-w-md bg-white/70 backdrop-blur-lg border border-white/40 shadow-2xl rounded-2xl p-8">
+      <div className="w-full max-w-md bg-white rounded-[3rem] shadow-[0_30px_70px_rgba(0,0,0,0.06)] p-12 border border-gray-50">
 
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900">
-            Partner With Us 🤝
+        {/* Header section */}
+        <div className="text-center mb-12">
+          <div className="inline-block px-4 py-2 bg-red-50 text-[#FF4757] text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6">
+            Partnership
+          </div>
+
+          <h2 className="text-4xl font-black text-[#1A1D23] tracking-tighter">
+            Expand Your <br />Kitchen 🍽️
           </h2>
-          <p className="text-gray-500 mt-2 text-sm">
-            Register your restaurant and start receiving orders
+
+          <p className="text-gray-400 font-medium mt-4 leading-relaxed">
+            Join the GOURMET network and start scaling your restaurant revenue today.
           </p>
         </div>
 
-        {/* Contact Info */}
-        <div className="space-y-4">
+        {/* Contact information */}
+        <div className="space-y-6">
 
-          {/* Phone */}
-          <div className="flex items-center justify-between bg-orange-50 border border-orange-100 rounded-xl p-4">
-
-            <div>
-              <p className="text-xs text-gray-500">Phone</p>
-              <p className="font-semibold text-gray-900">
-                +91 8799525425
-              </p>
-            </div>
-
-            <span className="text-orange-500 text-xl">📞</span>
-
+          <div className="group bg-gray-50 p-6 rounded-[2rem] hover:bg-[#1A1D23] transition-all duration-300">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 group-hover:text-gray-500">
+              Official Line
+            </p>
+            <p className="text-lg font-black text-[#1A1D23] group-hover:text-white">
+              +91 8799525425
+            </p>
           </div>
 
-          {/* Email */}
-          <div className="flex items-center justify-between bg-orange-50 border border-orange-100 rounded-xl p-4">
-
-            <div>
-              <p className="text-xs text-gray-500">Email</p>
-              <p className="font-semibold text-gray-900 break-all">
-                harshilbhungaliya689@gmail.com
-              </p>
-            </div>
-
-            <span className="text-orange-500 text-xl">✉️</span>
-
+          <div className="group bg-gray-50 p-6 rounded-[2rem] hover:bg-[#1A1D23] transition-all duration-300">
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1 group-hover:text-gray-500">
+              Direct Support
+            </p>
+            <p className="text-sm font-black text-[#1A1D23] group-hover:text-[#FF4757] break-all leading-none mt-2">
+              harshilbhungaliya689@gmail.com
+            </p>
           </div>
 
         </div>
 
-        {/* CTA */}
-        <div className="mt-8 text-center">
+        {/* Action */}
+        <div className="mt-12">
           <button
             onClick={() => navigate("/login")}
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl font-semibold shadow-md transition"
+            className="w-full bg-[#1A1D23] hover:bg-black text-white py-5 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl active:scale-95 transition-all"
           >
-            Back to Login
+            Return To Login
           </button>
         </div>
 
       </div>
+
     </div>
   );
 }

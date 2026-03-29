@@ -131,9 +131,9 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled, isE
       </h3>
 
       <div className="bg-gray-50 rounded-2xl p-5 mb-6">
-        <p className="text-sm text-gray-500 leading-relaxed italic line-clamp-4">
-          "{restaurant.message}"
-        </p>
+      <p className="text-sm text-gray-500 leading-relaxed italic whitespace-pre-wrap">
+        "{restaurant.message}"
+      </p>
       </div>
 
       <div className="flex justify-between items-end mt-auto">

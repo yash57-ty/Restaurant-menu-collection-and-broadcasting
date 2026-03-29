@@ -40,8 +40,16 @@ public class AuthService {
     }
 
     public void resetPassword(String phone, String newPassword) {
-        User user = userRepository.findByPhone(phone)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findByPhone(phone);
+
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        if (newPassword == null || newPassword.isEmpty()) {
+            throw new RuntimeException("Password cannot be empty");
+        }
+
         user.setPassword(newPassword);
         userRepository.save(user);
     }

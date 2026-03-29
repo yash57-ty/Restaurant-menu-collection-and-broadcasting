@@ -17,7 +17,6 @@ export default function MenuPage() {
 
   const BASE_URL = "/api";
 
-  // Fetch available cities on initial load
   useEffect(() => {
     const fetchCities = async () => {
       try {

@@ -64,7 +64,7 @@ function Login() {
         },
         body: JSON.stringify({
           phone: resetPhone,
-          newPassword: newPassword,
+          password: newPassword,
         }),
       });
   

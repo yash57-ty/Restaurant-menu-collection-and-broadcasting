@@ -32,7 +32,7 @@ public class AuthenticationController {
 
     @PostMapping("/forgot-password")
     public ResponseEntity<?> forgotPassword(@RequestBody LoginRequest request) {
-        authService.resetPassword(request.getPhone(), request.getPassword());
+        authService.resetPassword(request.phone(), request.password());
         return ResponseEntity.ok("Password updated successfully");
     }
 }

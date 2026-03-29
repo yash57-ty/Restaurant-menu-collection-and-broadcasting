@@ -22,11 +22,14 @@ function Orders() {
 
       const data = await res.json();
 
-      const sortedOrders = [...data].sort(
-        (a, b) => new Date(b.orderedAt) - new Date(a.orderedAt)
-      );
+      // ✅ FILTER + SORT (ONLY CHANGE)
+      const filteredAndSortedOrders = data
+        .filter(order => order.quantity > 0) // 🔥 removes zero-quantity orders
+        .sort(
+          (a, b) => new Date(b.orderedAt) - new Date(a.orderedAt)
+        );
 
-      setOrders(sortedOrders);
+      setOrders(filteredAndSortedOrders);
 
     } catch (err) {
       console.error(err);

@@ -38,4 +38,11 @@ public class AuthService {
         UserResponse userResponse=new UserResponse(user.getName(),user.getPhone(),user.getRole());
         return userResponse;
     }
+
+    public void resetPassword(String phone, String newPassword) {
+        User user = userRepository.findByPhone(phone)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPassword(newPassword);
+        userRepository.save(user);
+    }
 }

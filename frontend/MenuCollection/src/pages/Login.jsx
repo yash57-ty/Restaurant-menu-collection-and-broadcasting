@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
+  const [showForgot, setShowForgot] = useState(false);
+  const [resetPhone, setResetPhone] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -44,6 +47,39 @@ function Login() {
         navigate("/Admin-dashboard", { replace: true });
       }
 
+    } catch (err) {
+      console.error(err);
+      alert("Server error");
+    }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+  
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          phone: resetPhone,
+          newPassword: newPassword,
+        }),
+      });
+  
+      if (!res.ok) {
+        const msg = await res.text();
+        alert(msg || "Failed to reset password");
+        return;
+      }
+  
+      alert("Password updated successfully ✅");
+  
+      setShowForgot(false);
+      setResetPhone("");
+      setNewPassword("");
+  
     } catch (err) {
       console.error(err);
       alert("Server error");
@@ -101,6 +137,16 @@ function Login() {
             />
           </div>
 
+          <div className="text-right">
+            <button
+              type="button"
+              onClick={() => setShowForgot(true)}
+              className="text-sm text-orange-600 hover:underline"
+            >
+              Forgot Password?
+            </button>
+          </div>
+
           {/* Button */}
           <button
             type="submit"
@@ -110,6 +156,53 @@ function Login() {
           </button>
 
         </form>
+
+        {showForgot && (
+        <div className="mt-6 p-4 border rounded-xl bg-white/80">
+          <h3 className="text-lg font-semibold mb-3">
+            Reset Password
+          </h3>
+
+          <form onSubmit={handleResetPassword} className="space-y-3">
+
+            <input
+              type="text"
+              placeholder="Enter your phone"
+              value={resetPhone}
+              onChange={(e) => setResetPhone(e.target.value)}
+              required
+              className="w-full px-3 py-2 border rounded-lg"
+            />
+
+            <input
+              type="password"
+              placeholder="Enter new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              required
+              className="w-full px-3 py-2 border rounded-lg"
+            />
+
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                className="flex-1 bg-green-500 text-white py-2 rounded-lg"
+              >
+                Update
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setShowForgot(false)}
+                className="flex-1 bg-gray-300 py-2 rounded-lg"
+              >
+                Cancel
+              </button>
+            </div>
+
+          </form>
+        </div>
+      )}
 
         {/* Footer */}
         <div className="text-center text-sm mt-8 text-gray-600 space-y-2">

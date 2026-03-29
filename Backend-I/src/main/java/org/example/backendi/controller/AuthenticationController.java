@@ -29,4 +29,10 @@ public class AuthenticationController {
         UserResponse userResponse = authService.login(request);
         return ResponseEntity.ok(userResponse);
     }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody LoginRequest request) {
+        authService.resetPassword(request.getPhone(), request.getPassword());
+        return ResponseEntity.ok("Password updated successfully");
+    }
 }

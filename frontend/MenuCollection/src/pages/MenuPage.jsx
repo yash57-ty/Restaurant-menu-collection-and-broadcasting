@@ -14,6 +14,7 @@ export default function MenuPage() {
   const [cities, setCities] = useState([]);
   const [filteredCities, setFilteredCities] = useState([]);
   const [showCityList, setShowCityList] = useState(false);
+  const [expandedId, setExpandedId] = useState(null);
 
   const BASE_URL = "/api";
 
@@ -139,12 +140,16 @@ export default function MenuPage() {
     }
   };
 
+  const handleToggle = (menuId) => {
+    setExpandedId((prev) => (prev === menuId ? null : menuId));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-100 via-white to-amber-100">
 
       <div className="max-w-6xl mx-auto px-4 md:px-6 py-6">
 
-        {/* 🔥 Sticky Search Bar */}
+        {/*  Sticky Search Bar */}
         <div className="sticky top-0 z-40 mb-6">
 
           <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-md p-4 flex flex-col md:flex-row gap-4">
@@ -207,7 +212,7 @@ export default function MenuPage() {
 
         </div>
 
-        {/* 🔥 Search Result Indicator */}
+        {/*  Search Result Indicator */}
         {(search || city) && (
           <p className="text-sm text-gray-600 mb-4">
             Showing results
@@ -230,7 +235,7 @@ export default function MenuPage() {
           </div>
         )}
 
-        {/* 🔥 Menu Layout (will become compact after next step) */}
+        {/*  Menu Layout (will become compact after next step) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {menu.map((res) => (
             <RestaurantCard
@@ -238,6 +243,8 @@ export default function MenuPage() {
               restaurant={res}
               disabled={res.orderCount >= res.limit}
               onSelect={() => handleSelect(res)}
+              isExpanded={expandedId === res.menuId}
+              onToggle={() => handleToggle(res.menuId)}
             />
           ))}
         </div>

@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 
-export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
+export function RestaurantCard({ restaurant, isSelected, onSelect, disabled, isExpanded, onToggle }) {
 
   const [isMobile, setIsMobile] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 640);
@@ -18,13 +17,13 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
     ? (restaurant.orderCount / restaurant.limit) * 100
     : 0;
 
-  const handleClick = () => {
-    if (isMobile) {
-      setIsExpanded(prev => !prev);
-    } else {
-      if (!isLimitReached && !disabled) onSelect();
-    }
-  };
+    const handleClick = () => {
+      if (isMobile) {
+        onToggle();
+      } else {
+        if (!isLimitReached && !disabled) onSelect();
+      }
+    };
 
   //  MOBILE COMPACT VIEW 
   if (isMobile && !isExpanded) {
@@ -115,7 +114,7 @@ export function RestaurantCard({ restaurant, isSelected, onSelect, disabled }) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            setIsExpanded(false);
+            onToggle();
           }}
           className="w-full mt-2 text-sm text-gray-500"
         >
